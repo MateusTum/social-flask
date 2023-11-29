@@ -58,6 +58,11 @@ def cover():
     return render_template("cover.html")
 
 
+@app.route('/home')
+def home():
+    return render_template("home.html")
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     register_form = RegisterForm()
