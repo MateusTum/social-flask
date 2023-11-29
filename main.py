@@ -54,8 +54,8 @@ db.init_app(app)
 
 
 @app.route('/')
-def home():
-    return render_template("home.html")
+def cover():
+    return render_template("cover.html")
 
 
 @app.route('/register', methods=['GET', 'POST'])
