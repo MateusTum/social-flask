@@ -5,6 +5,7 @@ from flask_bootstrap import Bootstrap5
 # from flask_ckeditor import CKEditor
 # from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
+
 # from functools import wraps
 # from werkzeug.security import generate_password_hash, check_password_hash
 # from forms import
@@ -24,6 +25,7 @@ Bootstrap5(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy()
 db.init_app(app)
+
 
 # ~~~~~~~~~~~~~~~~~ END OF GENERAL CONFIGS ~~~~~~~~~~~~~~~~~
 
@@ -54,6 +56,16 @@ db.init_app(app)
 @app.route('/')
 def home():
     return render_template("home.html")
+
+
+@app.route('/register')
+def register():
+    return render_template("register.html")
+
+
+@app.route('/login')
+def login():
+    return render_template("login.html")
 
 
 if __name__ == "__main__":

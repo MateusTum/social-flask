@@ -7,3 +7,5 @@ footer.html
 .idea/
 .idea/misc.xml
 .idea/my-social-media-flask.iml
+*.iml
+*.xml
