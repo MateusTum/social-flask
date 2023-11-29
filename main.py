@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 # from functools import wraps
 # from werkzeug.security import generate_password_hash, check_password_hash
-# from forms import
+from forms import LoginForm, RegisterForm
 # import os
 
 
@@ -58,14 +58,16 @@ def home():
     return render_template("home.html")
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template("register.html")
+    register_form = RegisterForm()
+    return render_template("register.html", register_form=register_form)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    login_form = LoginForm()
+    return render_template("login.html", login_form=login_form)
 
 
 if __name__ == "__main__":

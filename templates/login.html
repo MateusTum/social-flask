@@ -1,4 +1,17 @@
+{% from "bootstrap5/form.html" import render_form %}
 {% include "header.html" %}
+
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <!--Registration form render-->
+        {{ render_form(login_form) }}
+        <!--flash messages-->
+      </div>
+    </div>
+  </div>
+</main>
 
 
 {% include "footer.html" %}
