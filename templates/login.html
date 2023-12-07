@@ -1,6 +1,7 @@
 {% from "bootstrap5/form.html" import render_form %}
-{% include "header.html" %}
+{% extends "base.html" %}
 
+{% block content %}
 <main>
   <div class="container">
     <div class="row">
@@ -12,6 +13,4 @@
     </div>
   </div>
 </main>
-
-
-{% include "footer.html" %}
+{% endblock %}
