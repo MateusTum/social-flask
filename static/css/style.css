@@ -132,3 +132,65 @@
 body {
   font-family: 'Roboto', sans-serif;
 }
+
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px; /* Adjust padding as needed */
+  color: white;
+}
+
+.header-left-box {
+  flex: 2;
+  text-align: left;
+}
+
+.header-home-box {
+  flex: 1;
+  text-align: center;
+}
+
+.header-right-box {
+  flex: 8;
+  text-align: right;
+}
+
+.read-more-content {
+    display: none;
+}
+
+.read-more-trigger {
+    cursor: pointer;
+    color: #4da6ff;
+}
+
+.left-box,
+.middle-boxes,
+.right-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.left-box {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-boxes {
+  flex: 10;
+  display: flex;
+}
+
+.middle-box {
+  flex: 1;
+  margin: 0 5px; /* Adjust margin as needed */
+}
+
+.right-box {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
