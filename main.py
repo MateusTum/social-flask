@@ -2,13 +2,14 @@
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 
-# from flask_ckeditor import CKEditor
+from flask_ckeditor import CKEditor
 # from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 
 # from functools import wraps
 # from werkzeug.security import generate_password_hash, check_password_hash
 from forms import LoginForm, RegisterForm
+
 # import os
 
 
@@ -17,6 +18,8 @@ from forms import LoginForm, RegisterForm
 app = Flask(__name__)
 # TODO: Config os.environ.get('FLASK_KEY')
 app.config['SECRET_KEY'] = "bacon"
+ckeditor = CKEditor()
+ckeditor.init_app(app)
 
 # Bootstrap5
 Bootstrap5(app)
@@ -73,6 +76,16 @@ def register():
 def login():
     login_form = LoginForm()
     return render_template("login.html", login_form=login_form)
+
+
+@app.route('/post')
+def show_post():
+    return render_template("post.html")
+
+
+@app.route('/examples')
+def examples():
+    return render_template("examples.html")
 
 
 if __name__ == "__main__":

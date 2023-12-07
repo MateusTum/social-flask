@@ -1,5 +1,118 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 
+{% block styles %}
+    <!--LOAD STYLES-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+    <style>
+        .read-more-content {
+            display: none;
+        }
 
-{% include "footer.html" %}
+        .read-more-trigger {
+            cursor: pointer;
+            color: #4da6ff;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <!--FEED DIV-->
+    <div id="main-window" class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <!--Left column start-->
+            <div class="col-lg-2 col-md-3 d-none d-md-block">
+                <div class="row">
+                    <div class="custom-left-column col-12">
+                        <!-- Content for left column goes here -->
+                        <div class="row mx-md-auto profile-rows">
+                            <div class="col-3 profile-picture-div d-flex justify-content-center">
+                                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                            </div>
+                            <!--User Profile-->
+                            <div class="col-9 d-flex justify-content-left align-items-center">
+                                <span>Mateus Tum</span>
+                            </div>
+                        </div>
+                        <div class="row mx-md-auto quick-access">
+                            <!-- Communities -->
+                            <!-- Communities Icon -->
+                            <div class="col-3 profile-picture-div d-flex justify-content-center">
+                                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                            </div>
+                            <!-- Communities Link-->
+                            <div class="col-9 d-flex justify-content-left align-items-center">
+                                <span>Communities</span>
+                            </div>
+
+                            <!-- Friends -->
+                            <!-- Friends Icon -->
+                            <div class="col-3 profile-picture-div d-flex justify-content-center">
+                                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                            </div>
+                            <!-- Friends Link -->
+                            <div class="col-9 d-flex justify-content-left align-items-center">
+                                <span>Friends</span>
+                            </div>
+                        </div>
+                        <div class="row mx-md-auto inner-left-column-row">
+                        <!-- Chat -->
+                        <!-- Chat Icon -->
+                        <div class="col-3 profile-picture-div d-flex justify-content-center">
+                            <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                        </div>
+                        <!-- Chat Link -->
+                        <div class="col-9 d-flex justify-content-left align-items-center">
+                            <span>Chat</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--Center column start-->
+            <div class="center-column col-lg-4 col-md-6">
+                <div class="row justify-content-center">
+                    <!--Content for center column goes here -->
+                </div>
+            </div>
+            <!--Right column start-->
+            <div class="col-lg-2 col-md-3 d-none d-md-block">
+                <div class="row">
+                    <div class="custom-right-column col-12">
+                <!-- Content for right column goes here -->
+            </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block scripts %}
+        <!--OTHER SCRIPTS-->
+        <!--Read more-->
+        <script>
+            function toggleReadMore() {
+                var moreText = document.querySelector('.read-more-content');
+                var triggerText = document.querySelector('.read-more-trigger');
+
+                if (moreText.style.display === 'none') {
+                    moreText.style.display = 'block';
+                    triggerText.innerText = 'Read less';
+                } else {
+                    moreText.style.display = 'none';
+                    triggerText.innerText = 'Read more...';
+                }
+            }
+        </script>
+        <!--IMG Carousel-->
+        <script>
+            // Initialize the carousel
+            var postCarousel = new bootstrap.Carousel(document.getElementById('postCarousel'), {
+                interval: false, // Disable automatic sliding
+            });
+        </script>
+
+{% endblock %}
