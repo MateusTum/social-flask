@@ -2,27 +2,176 @@
 
 {% block styles %}
 
+<style>
+    #full-post-title {
+      background-color: grey;
+      margin-left: 10px;
+    }
+
+    #full-post-content {
+        background-color: grey;
+        padding: 15px;
+    }
+
+    #author-title-box {
+      flex: 11;
+      background-color: black; /* Adjust color as needed */
+
+    }
+
+    .author-title-boxes {
+      flex: 1;
+      display: flex;
+    }
+
+    #post-title-box {
+        display: flex;
+
+    }
+
+    #post-settings-box {
+      flex: 1;
+      background-color: #e74c3c; /* Adjust color as needed */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #avatar-box {
+        background-color: red;
+        height: 100%;
+        padding: 5px
+    }
+
+    #post-avatar {
+        height: 50px;
+        width: 50px;
+        border-radius: 50px;
+    }
+
+    #post-author {
+      background-color: green;
+      margin-left: 10px;
+    }
+
+    #post-box {
+        padding 10px;
+    }
+
+    #main-window {
+        margin: 10px;
+    }
+
+    #post-interactions {
+        background-color: green;
+        margin-top: 5px;
+    }
+
+</style>
+
+
 {% endblock %}
 
 {% block content %}
     <!--Main div-->
     <div id="main-window" class="container-fluid">
         <div class="row d-flex justify-content-center">
-            <div class="col-lg-6 col-md-6">
-                <div class="row justify-content-center">
-                    <!-- Post Title -->
-                    <div id="full-post-title" class="col-12">
-
+            <div class="row col-lg-6 col-md-6">
+                <div id="avatar-box" class="col-1 justify-content-center align-items-start">
+                    <img id="post-avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                </div>
+                <div id="post-box" class="col-11 justify-content-center">
+                    <!-- Post Heading -->
+                    <div id="post-title-box" class="flex-container">
+                        <div id="author-title-box">
+                            <div id="full-post-title" class="author-title-boxes">
+                            <h2>
+                                Post Title Example
+                            </h2>
+                        </div>
+                            <div id="post-author" class="author-title-boxes">
+                            <span class="text-body-secondary">
+                                Author name
+                            </span>
+                        </div>
+                        </div>
+                        <div id="post-settings-box">
+                            <div>
+                                    <a href="#" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                        </svg>
+                                    </a>
+                                  <ul class="dropdown-menu text-small">
+                                        <li><a class="dropdown-item" href="#">Post Settings</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">Delete Post</a></li>
+                                  </ul>
+                              </div>
+                        </div>
                     </div>
-
                     <!-- Post Content -->
                     <div id="full-post-content" class="col-12">
+<!--                        Post picture-->
+                        <div id="post-pictures">
+                            <img src="{{ url_for('static', filename='assets/testcity.jpg') }}" class="img-fluid">
+                        </div>
+<!--                        Post body-->
+                        <div id="post-body">
+                          <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+                          </p>
+
+                          <p>
+                            Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.
+                          </p>
+
+                          <p>
+                            Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
+                          </p>
+
+                          <p>
+                            Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero.
+                          </p>
+
+                          <p>
+                            Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor.
+                          </p>
+                        </div>
 
                     </div>
+                    <!--Display likes, comments, awards-->
+                    <div id="post-interactions" class="container col-12">
+                        <div class="row text-center">
+                        <div class="likes-div col-4">
+                            <a>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                                  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                </svg>
+                                <span class="ms-1">58 Likes </span>
+                            </a>
+                        </div>
 
-                    <!-- Post Comments -->
-                    <div id="full-post-comments" class="col-12">
+                        <div class="comments-div col-4">
+                            <a>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+                                  <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15"/>
+                                </svg>
+                                <span class="ms-1">21 Comments</span>
+                            </a>
+                        </div>
 
+                        <div class="awards-div col-4">
+                            <a>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                                  <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
+                                </svg>
+                                <span class="ms-1">23 Awards</span>
+                            </a>
+                        </div>
+
+                    </div>
                     </div>
                 </div>
             </div>
