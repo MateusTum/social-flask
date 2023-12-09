@@ -4,18 +4,15 @@
 
 <style>
     #full-post-title {
-      background-color: grey;
       margin-left: 10px;
     }
 
     #full-post-content {
-        background-color: grey;
         padding: 15px;
     }
 
     #author-title-box {
       flex: 11;
-      background-color: black; /* Adjust color as needed */
 
     }
 
@@ -31,7 +28,6 @@
 
     #post-settings-box {
       flex: 1;
-      background-color: #e74c3c; /* Adjust color as needed */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -39,8 +35,6 @@
     }
 
     #avatar-box {
-        background-color: red;
-        height: 100%;
         padding: 5px
     }
 
@@ -51,7 +45,6 @@
     }
 
     #post-author {
-      background-color: green;
       margin-left: 10px;
     }
 
@@ -64,9 +57,21 @@
     }
 
     #post-interactions {
-        background-color: green;
         margin-top: 5px;
     }
+
+    #post-comments-box {
+        height: 500px;
+    }
+
+    #comments-avatars-box {
+        height: 500px;
+    }
+
+    #comments-inner-box {
+        height: 500px;
+    }
+
 
 </style>
 
@@ -87,7 +92,7 @@
                         <div id="author-title-box">
                             <div id="full-post-title" class="author-title-boxes">
                             <h2>
-                                Post Title Example
+                                {{ post.title }}
                             </h2>
                         </div>
                             <div id="post-author" class="author-title-boxes">
@@ -114,32 +119,15 @@
                     <!-- Post Content -->
                     <div id="full-post-content" class="col-12">
 <!--                        Post picture-->
+                        {% if post.image %}
                         <div id="post-pictures">
-                            <img src="{{ url_for('static', filename='assets/testcity.jpg') }}" class="img-fluid">
+                            <img src="{{ url_for('static', filename='uploads/' + post.image) }}" class="img-fluid">
                         </div>
+                        {% endif %}
 <!--                        Post body-->
                         <div id="post-body">
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
-                          </p>
-
-                          <p>
-                            Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris.
-                          </p>
-
-                          <p>
-                            Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
-                          </p>
-
-                          <p>
-                            Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero.
-                          </p>
-
-                          <p>
-                            Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor.
-                          </p>
+                            {{ post.content|safe }}
                         </div>
-
                     </div>
                     <!--Display likes, comments, awards-->
                     <div id="post-interactions" class="container col-12">
@@ -173,6 +161,15 @@
 
                     </div>
                     </div>
+                </div>
+                <div id="post-comments-box" class="flex-container">
+                    <div class="row">
+                        <div id="comments-avatars-box" class="col-1">
+                        </div>
+                        <div id="comments-inner-box" class="col-11">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

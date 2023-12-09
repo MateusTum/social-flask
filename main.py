@@ -1,4 +1,5 @@
-# from datetime import date
+from datetime import datetime
+
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 
@@ -34,26 +35,21 @@ db.init_app(app)
 
 # ~~~~~~~~~~~~~~~~~ TABLES ~~~~~~~~~~~~~~~~~
 
-# TODO: Association tables
+class Post(db.Model):
+    __tablename__ = "posts"
 
-# TODO: Government account table
-
-# TODO: Company account table
-
-# TODO: User account table
-
-# TODO: Post account table
-
-# TODO: Comment table
-
-# TODO: Group table
-
-# TODO: Chat table?
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.String)
+    image = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
 # ~~~~~~~~~~~~~~~~~ END OF TABLES ~~~~~~~~~~~~~~~~~
 
-# with app.app_context():
-#     db.create_all()
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route('/')
@@ -63,7 +59,8 @@ def cover():
 
 @app.route('/home')
 def home():
-    return render_template("home.html")
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return render_template("home.html", posts=posts)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -78,9 +75,10 @@ def login():
     return render_template("login.html", login_form=login_form)
 
 
-@app.route('/post')
-def show_post():
-    return render_template("post.html")
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+def show_post(post_id):
+    post = Post.query.get(post_id)
+    return render_template('post.html', post=post)
 
 
 @app.route('/examples')
