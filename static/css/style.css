@@ -28,6 +28,12 @@
     border-radius: 10px;
 }
 
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
 .custom-right-column {
     background-color: #343a40;
     height: 100%;
@@ -40,8 +46,8 @@
 }
 
 .avatar {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50px;
 }
 
@@ -49,11 +55,11 @@
     padding: 5px;
 }
 
-#postdate {
+.postdate {
     color: #999;
 }
 
-#commentdate {
+.comment-date {
     color: #999;
 }
 
@@ -136,25 +142,10 @@ body {
 
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 10px; /* Adjust padding as needed */
   color: white;
-}
-
-.header-left-box {
-  flex: 2;
-  text-align: left;
-}
-
-.header-home-box {
-  flex: 1;
-  text-align: center;
-}
-
-.header-right-box {
-  flex: 8;
-  text-align: right;
+  position: relative;
 }
 
 .read-more-content {

@@ -1,58 +1,66 @@
 <div class="col-lg-2 col-md-3 d-none d-md-block">
-    <div class="row">
+    <div class="sticky row">
         <div class="custom-left-column col-12">
             <!-- Content for left column goes here -->
-            <div class="row mx-md-auto profile-rows">
-                <div class="col-3 profile-picture-div d-flex justify-content-center">
-                    <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-                </div>
-                <!--User Profile-->
-                <div class="col-9 d-flex justify-content-left align-items-center">
-                    <span>Mateus Tum</span>
-                </div>
+            <div class="row mx-md-auto profile-rows justify-content-center">
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                    <div class="col-3 profile-picture-div d-flex justify-content-center">
+                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
             </div>
-            <div class="row mx-md-auto quick-access">
+                    <!--User Profile-->
+                    <div class="col-9 d-flex justify-content-left align-items-center">
+                    <span>{{ current_user.username }}</span>
+                </div>
+                </a>
+            </div>
+            <div class="row mx-md-auto quick-access justify-content-center">
                 <!-- Communities -->
-                <!-- Communities Icon -->
-                <div class="col-3 profile-picture-div d-flex justify-content-center">
-                    <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-                </div>
-                <!-- Communities Link-->
-                <div class="col-9 d-flex justify-content-left align-items-center">
-                    <span>Communities</span>
-                </div>
-
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                    <!-- Communities Icon -->
+                    <div class="col-3 profile-picture-div d-flex justify-content-center">
+                        <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                    </div>
+                    <!-- Communities Link-->
+                    <div class="col-9 d-flex justify-content-left align-items-center">
+                        <span>Communities</span>
+                    </div>
+                </a>
                 <!-- Friends -->
-                <!-- Friends Icon -->
-                <div class="col-3 profile-picture-div d-flex justify-content-center">
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                    <!-- Friends Icon -->
+                    <div class="col-3 profile-picture-div d-flex justify-content-center">
                     <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
                 </div>
-                <!-- Friends Link -->
-                <div class="col-9 d-flex justify-content-left align-items-center">
+                    <!-- Friends Link -->
+                    <div class="col-9 d-flex justify-content-left align-items-center">
                     <span>Friends</span>
                 </div>
+                </a>
             </div>
-            <div class="row mx-md-auto inner-left-column-row">
-            <!-- Chat -->
-            <!-- Chat Icon -->
-            <div class="col-3 profile-picture-div d-flex justify-content-center">
+            <div class="row mx-md-auto inner-left-column-row justify-content-center">
+                <!-- Chat -->
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                    <!-- Chat Icon -->
+                    <div class="col-3 profile-picture-div d-flex justify-content-center">
                 <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
             </div>
-            <!-- Chat Link -->
-            <div class="col-9 d-flex justify-content-left align-items-center">
-                <span>Chat</span>
+                    <!-- Chat Link -->
+                    <div class="col-9 d-flex justify-content-left align-items-center">
+                        <span>Chat</span>
+                    </div>
+                </a>
+                <!-- Show Post -->
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                    <!-- Post Icon -->
+                    <div class="col-3 profile-picture-div d-flex justify-content-center">
+                        <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                    </div>
+                    <!-- Post Link -->
+                    <div class="col-9 d-flex justify-content-left align-items-center">
+                        <span>Post</span>
+                    </div>
+                </a>
             </div>
-
-            <!-- Show Post -->
-            <!-- Post Icon -->
-            <div class="col-3 profile-picture-div d-flex justify-content-center">
-                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-            </div>
-            <!-- Post Link -->
-            <div class="col-9 d-flex justify-content-left align-items-center">
-                <a href="{{ url_for('show_post', post_id=1) }}">Post</a>
-            </div>
-        </div>
         </div>
     </div>
 </div>
