@@ -12,9 +12,21 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired(),
                                                      Length(min=8, max=16),
                                                      EqualTo('password_confirm',
                                                              message='Passwords must match')])
     password_confirm = PasswordField("Repeat Password", validators=[DataRequired(), Length(min=8, max=16)])
     submit = SubmitField("Register")
+
+
+class PostForm(FlaskForm):
+    title = StringField("Post Title", validators=[DataRequired()])
+    content = CKEditorField("Post Content", validators=[DataRequired()])
+    submit = SubmitField("Post")
+
+
+class CommentForm(FlaskForm):
+    content = CKEditorField("Comment Content", validators=[DataRequired()])
+    submit = SubmitField("Post")
