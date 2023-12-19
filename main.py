@@ -51,20 +51,37 @@ user_comment_association = db.Table('user_comment_association', db.Model.metadat
                                     db.Column('comment_id', db.Integer, db.ForeignKey('comments.id'))
                                     )
 
+followers = db.Table('followers', db.Model.metadata,
+                     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+                     db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
+                     )
+
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.String, nullable=False)
 
-    user_posts = db.Relationship("Post", secondary=user_post_association, back_populates="post_authors")
-    user_likes = db.Relationship("Post", secondary=user_post_likes_association, back_populates="post_likes")
-    user_comments = db.Relationship("Comment", secondary=user_comment_association, back_populates="comment_author")
+    # Relationship
+    posts = db.Relationship("Post", secondary=user_post_association, back_populates="authors")
+    likes = db.Relationship("Post", secondary=user_post_likes_association, back_populates="likes")
+    comments = db.Relationship("Comment", secondary=user_comment_association, back_populates="author")
+    profile = db.relationship('Profile', back_populates='user', uselist=False)
+    followed = db.relationship(
+        'User', secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        backref=db.backref('followers', lazy='dynamic'),
+        lazy='dynamic'
+    )
 
+    # Dates
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -77,19 +94,22 @@ class Post(db.Model):
     content = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
 
-    post_authors = db.Relationship("User", secondary=user_post_association, back_populates="user_posts")
-    post_likes = db.Relationship("User", secondary=user_post_likes_association, back_populates="user_likes")
-    post_comments = db.Relationship("Comment", secondary=post_comment_association, back_populates="comment_post")
+    # Relationship
+    authors = db.Relationship("User", secondary=user_post_association, back_populates="posts")
+    likes = db.Relationship("User", secondary=user_post_likes_association, back_populates="likes")
+    comments = db.Relationship("Comment", secondary=post_comment_association, back_populates="post")
 
+    # Dates
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+    # Methods
     def get_post_likes(self):
-        amount_of_likes = len(self.post_likes)
+        amount_of_likes = len(self.likes)
         return amount_of_likes
 
     def get_post_comments(self):
-        amount_of_comments = len(self.post_comments)
+        amount_of_comments = len(self.comments)
         return amount_of_comments
 
 
@@ -99,9 +119,49 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String, nullable=False)
 
-    comment_author = db.Relationship("User", secondary=user_comment_association, back_populates="user_comments")
-    comment_post = db.Relationship("Post", secondary=post_comment_association, back_populates="post_comments")
+    # Relationship
+    author = db.Relationship("User", secondary=user_comment_association, back_populates="comments")
+    post = db.Relationship("Post", secondary=post_comment_association, back_populates="comments")
 
+    # Dates
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+
+class Profile(db.Model):
+    __tablename__ = 'profile'
+
+    id = db.Column(db.Integer, primary_key=True)
+    bio = db.Column(db.String, nullable=True)
+    phone_number = db.Column(db.String(15), nullable=True)
+    date_of_birth = db.Column(db.Date, nullable=True)
+    street_address = db.Column(db.String(255), nullable=True)
+    city = db.Column(db.String(100), nullable=True)
+    state = db.Column(db.String(100), nullable=True)
+    postal_code = db.Column(db.String(20), nullable=True)
+    country = db.Column(db.String(100), nullable=True)
+    gender = db.Column(db.String(10), nullable=True)
+    occupation = db.Column(db.String(100), nullable=True)
+    company = db.Column(db.String(100), nullable=True)
+    education = db.Column(db.String(255), nullable=True)
+    website = db.Column(db.String(255), nullable=True)
+
+    # Social media profiles
+    facebook_profile = db.Column(db.String(255))
+    twitter_profile = db.Column(db.String(255))
+    linkedin_profile = db.Column(db.String(255))
+
+    # Interests related to the user
+    interests = db.Column(db.String(255))
+    hobbies = db.Column(db.String(255))
+
+    # Foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
+
+    # Relationship
+    user = db.relationship('User', back_populates='profile')
+
+    # Dates
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -162,6 +222,8 @@ def register():
             return redirect(url_for('login'))
         else:
             new_user = User(
+                first_name=request.form.get('first_name'),  # type: ignore
+                last_name=request.form.get('last_name'),  # type: ignore
                 username=request.form.get('username'),  # type: ignore
                 email=request.form.get('email'),  # type: ignore
                 password=get_hashed_password(),  # type: ignore
@@ -202,7 +264,7 @@ def add_new_post():
             content=create_post_form.content.data,
         )
         db.session.add(new_post)
-        current_user.user_posts.append(new_post)
+        current_user.posts.append(new_post)
         db.session.commit()
         return redirect(url_for("home"))
     return render_template("new-post.html", create_post_form=create_post_form)
@@ -232,16 +294,19 @@ def add_new_comment(post_id):
 def like_post(post_id):
     post = Post.query.get(post_id)
     if post:
-        if post in current_user.user_likes:
-            current_user.user_likes.remove(post)
+        # Toggle the like status (you can use a more sophisticated logic here)
+        if post not in current_user.likes:
+            current_user.likes.append(post)
             db.session.commit()
-            return ('like removed')
+            liked = True
         else:
-            current_user.user_likes.append(post)
+            current_user.likes.remove(post)
             db.session.commit()
-            return ('like added')
+            liked = False
+        # Return the updated like count and liked status as JSON
+        return jsonify({'likes': post.get_post_likes(), 'liked': liked})
     else:
-        return "404"
+        return jsonify({'error': 'Post not found'}), 404
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -265,6 +330,16 @@ def show_post(post_id):
 @login_required
 def examples():
     return render_template("examples.html")
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/profile/<username>', methods=['GET'])
+@login_required
+def show_profile(username):
+    user = User.query.filter_by(username=username).scalar()
+    posts = user.posts[::-1]
+    print(type(posts))
+    return render_template('profile.html', user=user, posts=posts)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
