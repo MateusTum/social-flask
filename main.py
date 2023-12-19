@@ -281,8 +281,8 @@ def add_new_comment(post_id):
             content=create_comment_form.content.data,
         )
         db.session.add(new_comment)
-        new_comment.comment_author.append(current_user)
-        new_comment.comment_post.append(current_post)
+        new_comment.author.append(current_user)
+        new_comment.post.append(current_post)
         db.session.commit()
         return redirect(url_for("home"))
     return render_template("new-comment.html", create_comment_form=create_comment_form)
