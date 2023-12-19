@@ -62,3 +62,4 @@ class UserProfileForm(FlaskForm):
     # Interests related to the user
     interests = StringField('Interests', validators=[Optional(), Length(max=255)])
     hobbies = StringField('Hobbies', validators=[Optional(), Length(max=255)])
+    submit = SubmitField("Submit")
