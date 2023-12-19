@@ -5,14 +5,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <style>
-    .read-more-content {
-        display: none;
+
+    .read-more {
+        cursor: pointer;
+        color: #0068cf;
     }
 
-    .read-more-trigger {
-        cursor: pointer;
-        color: #4da6ff;
-    }
 </style>
 {% endblock %}
 
@@ -213,7 +211,12 @@
                         <!-- Post text -->
                         <div class="col-12 text-left">
                             <div>
+                                {% if post.content|length > 400 %}
+                                {{ post.content[:400]|safe }}...
+                                <a class="read-more" href="{{ url_for('show_post', post_id=post.id) }}">Read More</a>
+                                {% else %}
                                 {{ post.content|safe }}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
