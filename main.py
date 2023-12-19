@@ -6,7 +6,7 @@ from flask_login import UserMixin, login_user, current_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import LoginForm, RegisterForm, PostForm, CommentForm
+from forms import LoginForm, RegisterForm, PostForm, CommentForm, UserProfileForm
 
 # import os
 
@@ -372,8 +372,22 @@ def examples():
 def show_profile(username):
     user = User.query.filter_by(username=username).scalar()
     posts = user.posts[::-1]
-    print(type(posts))
     return render_template('profile.html', user=user, posts=posts)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/edit-profile/<username>', methods=['GET'])
+@login_required
+def edit_profile(username):
+    user = User.query.filter_by(username=username).scalar()
+    if user:
+        if current_user.username == user.username:
+            form = UserProfileForm()
+            return render_template('edit-profile.html', form=form)
+        else:
+            return jsonify({'error': 'Forbidden'}), 403
+    else:
+        return jsonify({'error': 'Profile not found'}), 404
 
 
 # ----------------------------------------------------------------------------------------------------------------------
