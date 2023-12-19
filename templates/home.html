@@ -71,7 +71,7 @@
                                 </svg>
                             </a>
                             <ul class="dropdown-menu text-small">
-                                <li><a class="dropdown-item" href="#">Post Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('show_post', post_id=post.id) }}">Post Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -196,11 +196,12 @@
                                 </svg>
                             </a>
                             <ul class="dropdown-menu text-small">
-                                <li><a class="dropdown-item disabled" href="#">Post Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item disabled" href="#">Delete Post</a></li>
+                                  
+                                <li><a class="dropdown-item delete-post" href="#" data-post-id="{{ post.id }}">Delete Post</a></li>
                             </ul>
                         </div>
                         {% endif %}
@@ -285,5 +286,6 @@
     {% endblock %}
 
     {% block scripts %}
+
 
     {% endblock %}

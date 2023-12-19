@@ -307,6 +307,40 @@ def like_post(post_id):
         return jsonify({'likes': post.get_post_likes(), 'liked': liked})
     else:
         return jsonify({'error': 'Post not found'}), 404
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@login_required
+def edit_post(post_id):
+    post = Post.query.get(post_id)
+    if post:
+        if current_user in post.authors:
+            form = PostForm(title=post.title, content=post.content)
+            if form.validate_on_submit() and request.method == 'POST':
+                post.title = form.title.data
+                post.content = form.content.data
+                db.session.commit()
+                return redirect(url_for('show_post', post_id=post_id))
+            return render_template('edit-post.html', form=form)
+        else:
+            return jsonify({'error': 'Forbidden'}), 403
+    else:
+        return jsonify({'error': 'Post not found'}), 404
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route("/delete-post/<int:post_id>", methods=["POST"])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+    if post:
+        if current_user in post.authors:
+                db.session.delete(post)
+                db.session.commit()
+                return redirect(url_for('home'))
+        else:
+            return jsonify({'error': 'Forbidden'}), 403
+    else:
+        return jsonify({'error': 'Post not found'}), 404
 
 
 # ----------------------------------------------------------------------------------------------------------------------
