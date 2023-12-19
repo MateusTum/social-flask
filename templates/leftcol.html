@@ -3,19 +3,19 @@
         <div class="custom-left-column col-12">
             <!-- Content for left column goes here -->
             <div class="row mx-md-auto profile-rows justify-content-center">
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                <a href="{{ url_for('show_profile', username=current_user.username) }}" class="row btn d-flex">
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
-                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-            </div>
+                        <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                    </div>
                     <!--User Profile-->
                     <div class="col-9 d-flex justify-content-left align-items-center">
-                    <span>{{ current_user.username }}</span>
-                </div>
+                        <span>{{ current_user.username }}</span>
+                    </div>
                 </a>
             </div>
             <div class="row mx-md-auto quick-access justify-content-center">
                 <!-- Communities -->
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex disabled">
                     <!-- Communities Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
@@ -26,38 +26,27 @@
                     </div>
                 </a>
                 <!-- Friends -->
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex disabled">
                     <!-- Friends Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
-                    <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-                </div>
+                        <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                    </div>
                     <!-- Friends Link -->
                     <div class="col-9 d-flex justify-content-left align-items-center">
-                    <span>Friends</span>
-                </div>
+                        <span>Friends</span>
+                    </div>
                 </a>
             </div>
             <div class="row mx-md-auto inner-left-column-row justify-content-center">
                 <!-- Chat -->
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex disabled">
                     <!-- Chat Icon -->
-                    <div class="col-3 profile-picture-div d-flex justify-content-center">
-                <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
-            </div>
-                    <!-- Chat Link -->
-                    <div class="col-9 d-flex justify-content-left align-items-center">
-                        <span>Chat</span>
-                    </div>
-                </a>
-                <!-- Show Post -->
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
-                    <!-- Post Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
                     </div>
-                    <!-- Post Link -->
+                    <!-- Chat Link -->
                     <div class="col-9 d-flex justify-content-left align-items-center">
-                        <span>Post</span>
+                        <span>Chat</span>
                     </div>
                 </a>
             </div>
