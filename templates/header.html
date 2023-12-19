@@ -1,3 +1,29 @@
 <header class="border-bottom">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container-fluid">
 
+      <a class="navbar-brand" href="{{ url_for('home') }}">My Social Media</a>
+
+      {% if current_user.is_authenticated %}
+      <div class="ml-auto">
+        <div class="flex-shrink-0 dropdown">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser2">
+            <li><a class="dropdown-item" href="{{ url_for('add_new_post') }}">New Post</a></li>
+            <li><a class="dropdown-item disabled" href="#">Settings</a></li>
+            <li><a class="dropdown-item "
+                href="{{ url_for('show_profile', username=current_user.username) }}">Profile</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </nav>
 </header>
