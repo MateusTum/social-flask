@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField, TextAreaField
-from wtforms.validators import DataRequired, URL, Length, EqualTo, Optional
+from wtforms import StringField, SubmitField, PasswordField, DateField, TextAreaField, FileField
+from wtforms.validators import DataRequired, URL, Length, EqualTo, Optional, ValidationError
 from flask_ckeditor import CKEditorField
+from PIL import Image
 
 
 # Login form ----------------------------------------------------
@@ -40,6 +41,7 @@ class CommentForm(FlaskForm):
 
 # Profile Form ----------------------------------------------------
 class UserProfileForm(FlaskForm):
+    profile_img = FileField('Profile Picture')
     bio = TextAreaField('Bio', validators=[Optional(), Length(max=255)])
     phone_number = StringField('Phone Number', validators=[Optional(), Length(max=15)])
     date_of_birth = DateField('Date of Birth', format='%Y-%m-%d', validators=[Optional()])
@@ -63,3 +65,13 @@ class UserProfileForm(FlaskForm):
     interests = StringField('Interests', validators=[Optional(), Length(max=255)])
     hobbies = StringField('Hobbies', validators=[Optional(), Length(max=255)])
     submit = SubmitField("Submit")
+
+    # Todo: validate profile image
+    # def validate_image(self, field):
+    #     if field.data:
+    #         self.profile_img = Image.open(field.data)
+    #         max_width = 600  # Set your maximum width
+    #         max_height = 600  # Set your maximum height
+    #
+    #         if self.profile_img.width > max_width or self.profile_img.height > max_height:
+    #             raise ValidationError(f'Image dimensions must be at most {max_width}x{max_height} pixels.')
