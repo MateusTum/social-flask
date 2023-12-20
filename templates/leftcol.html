@@ -5,7 +5,7 @@
             <div class="row mx-md-auto profile-rows justify-content-center">
                 <a href="{{ url_for('show_profile', username=current_user.username) }}" class="row btn d-flex">
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
-                        <img class="avatar" src="{{ url_for('static', filename='assets/avatar.jpg') }}">
+                        <img class="avatar" src="{{ current_user.profile.profile_image_path }}">
                     </div>
                     <!--User Profile-->
                     <div class="col-9 d-flex justify-content-left align-items-center">
