@@ -1,15 +1,13 @@
+import os
 from datetime import datetime
-from flask import Flask, abort, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, current_user, logout_user, login_required, LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import LoginForm, RegisterForm, PostForm, CommentForm, UserProfileForm
-
-# import os
-
+from funcs import generate_unique_filename
 
 # Flask configs
 app = Flask(__name__)
@@ -132,6 +130,7 @@ class Profile(db.Model):
     __tablename__ = 'profile'
 
     id = db.Column(db.Integer, primary_key=True)
+    profile_image_path = db.Column(db.String(255))
     bio = db.Column(db.String, nullable=True)
     phone_number = db.Column(db.String(15), nullable=True)
     date_of_birth = db.Column(db.Date, nullable=True)
@@ -230,6 +229,9 @@ def register():
                 role="user",  # type: ignore
             )
             db.session.add(new_user)
+            new_user_profile = Profile()
+            new_user.profile = new_user_profile
+            db.session.add(new_user_profile)
             db.session.commit()
             return redirect(url_for('login'))
     return render_template("register.html", register_form=register_form)
@@ -307,6 +309,8 @@ def like_post(post_id):
         return jsonify({'likes': post.get_post_likes(), 'liked': liked})
     else:
         return jsonify({'error': 'Post not found'}), 404
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
 @login_required
@@ -334,9 +338,9 @@ def delete_post(post_id):
     post = Post.query.get(post_id)
     if post:
         if current_user in post.authors:
-                db.session.delete(post)
-                db.session.commit()
-                return redirect(url_for('home'))
+            db.session.delete(post)
+            db.session.commit()
+            return redirect(url_for('home'))
         else:
             return jsonify({'error': 'Forbidden'}), 403
     else:
@@ -376,16 +380,66 @@ def show_profile(username):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-@app.route('/edit-profile/<username>', methods=['GET'])
+@app.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
-def edit_profile(username):
-    user = User.query.filter_by(username=username).scalar()
+def edit_profile():
+    user = User.query.filter_by(username=current_user.username).scalar()
     if user:
-        if current_user.username == user.username:
-            form = UserProfileForm()
-            return render_template('edit-profile.html', form=form)
-        else:
-            return jsonify({'error': 'Forbidden'}), 403
+        form = UserProfileForm(
+            bio=user.profile.bio,
+            phone_number=user.profile.phone_number,
+            date_of_birth=user.profile.date_of_birth,
+            street_address=user.profile.street_address,
+            city=user.profile.city,
+            state=user.profile.state,
+            postal_code=user.profile.postal_code,
+            country=user.profile.country,
+            gender=user.profile.gender,
+            occupation=user.profile.occupation,
+            company=user.profile.company,
+            education=user.profile.education,
+            website=user.profile.website,
+            facebook_profile=user.profile.facebook_profile,
+            twitter_profile=user.profile.twitter_profile,
+            linkedin_profile=user.profile.linkedin_profile,
+            interests=user.profile.interests,
+            hobbies=user.profile.hobbies,
+        )
+        if form.validate_on_submit() and request.method == 'POST':
+            image = form.profile_img.data
+            if image:
+                file_extension = os.path.splitext(image.filename)[1]
+                unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
+                image.filename = unique_filename
+                upload_path = os.path.join(f'static/uploads/{current_user.username}', image.filename)
+                upload_directory = os.path.join(f'./static/uploads/{current_user.username}')
+                try:
+                    image.save(upload_path)
+                except FileNotFoundError:
+                    os.makedirs(upload_directory, exist_ok=True)
+                    image.save(upload_path)
+                user.profile.profile_image_path = "/" + upload_path
+            user.profile.bio = form.bio.data
+            user.profile.phone_number = form.phone_number.data
+            user.profile.date_of_birth = form.date_of_birth.data
+            user.profile.street_address = form.street_address.data
+            user.profile.city = form.city.data
+            user.profile.state = form.state.data
+            user.profile.postal_code = form.postal_code.data
+            user.profile.country = form.country.data
+            user.profile.gender = form.gender.data
+            user.profile.occupation = form.occupation.data
+            user.profile.company = form.company.data
+            user.profile.education = form.education.data
+            user.profile.website = form.website.data
+            user.profile.facebook_profile = form.facebook_profile.data
+            user.profile.twitter_profile = form.twitter_profile.data
+            user.profile.linkedin_profile = form.linkedin_profile.data
+            user.profile.interests = form.interests.data
+            user.profile.hobbies = form.hobbies.data
+            db.session.commit()
+            return redirect(url_for('show_profile', username=user.username))
+        return render_template('edit-profile.html', form=form)
     else:
         return jsonify({'error': 'Profile not found'}), 404
 
