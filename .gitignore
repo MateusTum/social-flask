@@ -6,3 +6,4 @@ venv
 .idea/my-social-media-flask.iml
 *.iml
 *.xml
+static/uploads/
