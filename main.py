@@ -8,9 +8,17 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import LoginForm, RegisterForm, PostForm, CommentForm, UserProfileForm
 from funcs import generate_unique_filename
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Flask configs
 app = Flask(__name__)
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    storage_uri="memory://",  # This example uses in-memory storage; you may want to use a more persistent storage for a production environment
+)
+
 # TODO: Config os.environ.get('FLASK_KEY')
 app.config['SECRET_KEY'] = "bacon"
 ckeditor = CKEditor()
@@ -27,6 +35,8 @@ Bootstrap5(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy()
 db.init_app(app)
+
+ROWS_PER_PAGE = 10
 
 # ----------------------------------------------------------------------------------------------------------------------
 user_post_association = db.Table('user_post_association', db.Model.metadata,
@@ -195,10 +205,21 @@ def cover():
 
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route('/home')
+@limiter.limit("1 per second")
 @login_required
 def home():
-    posts = Post.query.order_by(Post.created_at.desc()).where(Post.status == 'active').all()
-    return render_template("home.html", posts=posts)
+    page = request.args.get('page', 1, type=int)
+    load_more = request.args.get('loadMore', type=bool)
+    posts = Post.query.order_by(Post.created_at.desc()).where(Post.status == 'active').paginate(page=page,
+                                                                                                per_page=ROWS_PER_PAGE)
+    if load_more:
+        response_data = {
+            'content': render_template('more-posts.html', posts=posts),
+            'last_page': True if page == posts.pages else False,
+        }
+        return jsonify(response_data)
+    elif load_more is None:
+        return render_template("home.html", posts=posts)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -291,7 +312,8 @@ def add_new_post():
                     file_extension = os.path.splitext(file.filename)[1]
                     unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
                     file.filename = unique_filename
-                    upload_path = os.path.join(f'static/uploads/{current_user.username}/posts/{new_post.id}', file.filename)
+                    upload_path = os.path.join(f'static/uploads/{current_user.username}/posts/{new_post.id}',
+                                               file.filename)
 
                     try:
                         file.save(upload_path)
