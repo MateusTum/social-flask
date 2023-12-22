@@ -65,6 +65,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     role = db.Column(db.String, nullable=False)
+    status = db.Column(db.String, nullable=False)
 
     # Relationship
     posts = db.Relationship("Post", secondary=user_post_association, back_populates="authors")
@@ -91,6 +92,7 @@ class Post(db.Model):
     title = db.Column(db.String, nullable=False)
     content = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
+    status = db.Column(db.String, nullable=False)
 
     # Relationship
     authors = db.Relationship("User", secondary=user_post_association, back_populates="posts")
@@ -109,6 +111,15 @@ class Post(db.Model):
     def get_post_comments(self):
         amount_of_comments = len(self.comments)
         return amount_of_comments
+
+    def get_post_images(self):
+        folder_path = "./static/" + self.image
+        try:
+            filenames = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+            return filenames
+        except Exception as e:
+            print(f"Error getting filenames in {folder_path}: {e}")
+            return []
 
 
 class Comment(db.Model):
@@ -186,7 +197,7 @@ def cover():
 @app.route('/home')
 @login_required
 def home():
-    posts = Post.query.order_by(Post.created_at.desc()).all()
+    posts = Post.query.order_by(Post.created_at.desc()).where(Post.status == 'active').all()
     return render_template("home.html", posts=posts)
 
 
@@ -227,6 +238,7 @@ def register():
                 email=request.form.get('email'),  # type: ignore
                 password=get_hashed_password(),  # type: ignore
                 role="user",  # type: ignore
+                status="active",  # type: ignore
             )
             db.session.add(new_user)
             new_user_profile = Profile()
@@ -264,11 +276,35 @@ def add_new_post():
         new_post = Post(
             title=create_post_form.title.data,
             content=create_post_form.content.data,
+            status="active",
         )
         db.session.add(new_post)
+        db.session.commit()
+        if 'images' in request.files:
+            files = request.files.getlist('images')
+
+            if len(files) > 1:
+                uploaded_images = create_post_form.images.data
+                upload_directory = os.path.join(f'./static/uploads/{current_user.username}/posts/{new_post.id}')
+
+                for file in uploaded_images:
+                    file_extension = os.path.splitext(file.filename)[1]
+                    unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
+                    file.filename = unique_filename
+                    upload_path = os.path.join(f'static/uploads/{current_user.username}/posts/{new_post.id}', file.filename)
+
+                    try:
+                        file.save(upload_path)
+                    except FileNotFoundError:
+                        os.makedirs(upload_directory, exist_ok=True)
+                        file.save(upload_path)
+
+                new_post.image = f"uploads/{current_user.username}/posts/{new_post.id}/"
+
         current_user.posts.append(new_post)
         db.session.commit()
         return redirect(url_for("home"))
+
     return render_template("new-post.html", create_post_form=create_post_form)
 
 
@@ -338,7 +374,7 @@ def delete_post(post_id):
     post = Post.query.get(post_id)
     if post:
         if current_user in post.authors:
-            db.session.delete(post)
+            post.status = 'deleted'
             db.session.commit()
             return redirect(url_for('home'))
         else:
@@ -411,14 +447,14 @@ def edit_profile():
                 file_extension = os.path.splitext(image.filename)[1]
                 unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
                 image.filename = unique_filename
-                upload_path = os.path.join(f'static/uploads/{current_user.username}', image.filename)
-                upload_directory = os.path.join(f'./static/uploads/{current_user.username}')
+                upload_path = os.path.join(f'static/uploads/{current_user.username}/pictures/profile/', image.filename)
+                upload_directory = os.path.join(f'./static/uploads/{current_user.username}/pictures/profile')
                 try:
                     image.save(upload_path)
                 except FileNotFoundError:
                     os.makedirs(upload_directory, exist_ok=True)
                     image.save(upload_path)
-                user.profile.profile_image_path = "/" + upload_path
+                    user.profile.profile_image_path = "/" + upload_path
             user.profile.bio = form.bio.data
             user.profile.phone_number = form.phone_number.data
             user.profile.date_of_birth = form.date_of_birth.data
