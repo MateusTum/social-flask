@@ -1,14 +1,58 @@
 {% extends "base.html" %}
 {% import "macros.html" as macros %}
 {% block styles %}
-<!--LOAD STYLES-->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 <style>
 
-    .read-more {
-        cursor: pointer;
-        color: #0068cf;
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .btn-bd-primary {
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-green-bg);
+      --bs-btn-border-color: var(--bd-green-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #388e3c;
+      --bs-btn-hover-border-color: #388e3c;
+      --bs-btn-focus-shadow-rgb: var(--bd-green-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #2e7d32;
+      --bs-btn-active-border-color: #2e7d32;
+    }
+
+        /* Light theme background color */
+        [data-bs-theme='light'] .btn-bd-primary {
+          background-color: #c4c4c4;
+        }
+
+        /* Dark theme background color */
+        [data-bs-theme='dark'] .btn-bd-primary {
+          background-color: #343a40;
+        }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+
+    .bd-mode-toggle .dropdown-menu .active .bi {
+      display: block !important;
+    }
+
+    .custom-left-column {
+    height: 100%;
+    margin: 10px;
+    }
+
+    .center-column {
+    margin-top: 10px;
+    }
+
+    .custom-right-column {
+    height: 100%;
+    margin: 10px;
     }
 
 </style>
@@ -41,10 +85,10 @@
                 <!-- Post -->
                 <div class="post row justify-content-center">
                     <!-- Post top div -->
-                    <div class="post-title d-flex col-12">
+                    <div class="post-title d-flex col-12" >
                         <!-- Profile picture -->
                         <div class="left-box">
-                            <img class="avatar" src="{{ post.authors[0].profile.profile_image_path }}">
+                            <img class="post-avatar" src="{{ post.authors[0].profile.profile_image_path }}">
                         </div>
                         <!-- Post title and Author -->
                         <div class="middle-boxes">
@@ -164,63 +208,18 @@
         <!--Right column start-->
         {% include "rightcol.html" %}
     </div>
-
+    {{ macros.color_theme() }}
     {% endblock %}
 
     {% block scripts %}
-
+    <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>
     <script>
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function demo() {
-            for (let i = 0; i < 5; i++) {
-                await sleep(i * 1000);
-            }
-            console.log('Done');
-        }
-
-        var loadMore = true;
-        var page = 2; // Initial page
-
-        $(document).ready(function() {
-            $(window).scroll(function() {
-                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200 && loadMore) {
-                    demo();
-                    loadContent();
-                    demo();
-                }
-            });
-        });
-
-        function loadContent() {
-            const queryParams = new URLSearchParams({ page, loadMore });
-            var apiUrl = '/home?' + queryParams;
-
-            $.ajax({
-                url: apiUrl,
-                method: 'GET',
-                success: function(response) {
-                    if (response.last_page == false) {
-                        $('#feed-posts').append(response.content);
-                        console.log('Loading more posts');
-                        console.log(page);
-                        page++;
-
-                    } else {
-                        $('#feed-posts').append(response.content);
-                        console.log('No more posts to load');
-                        loadMore = false;
-                    }
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
-        }
-
-
+      // Add a script to toggle the visibility of the theme dropdown content
+      document.getElementById('toggleThemeDropdown').addEventListener('click', function () {
+        var themeDropdownContent = document.getElementById('themeDropdownContent');
+        themeDropdownContent.style.display = (themeDropdownContent.style.display === 'none') ? 'block' : 'none';
+      });
     </script>
-
     {% endblock %}

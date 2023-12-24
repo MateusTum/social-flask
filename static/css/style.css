@@ -1,46 +1,63 @@
+:root {
+  --bs-primary-light: #FFFFFF; /* Light theme background color */
+  --bs-primary-dark: #343a40;  /* Dark theme background color */
+}
+
 .feed {
     height: 100%;
     padding: 20px;
     margin: 10px;
 }
 
-.custom-left-column {
-    height: 100%;
-    margin: 10px;
-}
-
 .profile-rows {
-    background-color: #343a40;
     border-radius: 10px;
     margin-bottom: 10px;
 }
+
+    /* Light theme background color */
+    [data-bs-theme='light'] .profile-rows {
+      background-color: #c4c4c4;
+    }
+
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .profile-rows {
+      background-color: #343a40;
+    }
 
 .quick-access {
-    background-color: #343a40;
     border-radius: 10px;
     margin-bottom: 10px;
 }
+
+    /* Light theme background color */
+    [data-bs-theme='light'] .quick-access {
+      background-color: #c4c4c4;
+    }
+
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .quick-access {
+      background-color: #343a40;
+    }
 
 .inner-left-column-row {
     background-color: #343a40;
     border-radius: 10px;
 }
 
+    /* Light theme background color */
+    [data-bs-theme='light'] .inner-left-column-row {
+      background-color: #c4c4c4;
+    }
+
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .inner-left-column-row {
+      background-color: #343a40;
+    }
+
 .sticky {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-}
-
-.custom-right-column {
-    background-color: #343a40;
-    height: 100%;
-    margin: 10px;
-    border-radius: 10px;
-}
-
-.center-column {
-    margin-top: 10px;
 }
 
 .avatar {
@@ -51,93 +68,145 @@
     border-radius: 50px;
 }
 
-.profile-picture-div {
-    padding: 5px;
-}
 
-.postdate {
-    color: #999;
-}
+/* POST SETTINGS */
 
-.comment-date {
-    margin-bottom: 0;
-    color: #999;
-}
-
-.post {
-    margin-bottom: 10px;
-}
-
-.post-title {
-    background-color: #343a40;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 10px;
-}
-
-
-.post-content {
-    background-color: #343a40;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    margin-bottom: 5px;
+    .post-avatar {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 55px;
+        height: 55px;
+        border-radius: 100%;
     }
 
-.post-image-content {
-    background-color: #343a40;
-    padding-top: 10px;
-    padding-left: 0px;
-    padding-right: 0px;
-    object-fit: cover;
+    .profile-picture-div {
+        padding: 5px;
     }
 
-.carousel-inner img {
-    width: 100%;
-    height: 50vh;
-    object-fit: cover; /* or object-fit: contain; depending on your preference */
- }
+    .postdate {
+        color: #999;
+    }
 
-.carousel {
-    padding: 0;
-}
+    .comment-date {
+        margin-bottom: 0;
+        color: #999;
+    }
 
-.post-comments {
-    background-color: #343a40;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
+    .post {
+        margin-bottom: 10px;
+    }
 
-.post-interactions {
-    background-color: #343a40;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 5px;
-}
+    .post-title {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 10px;
+    }
 
-.avatar-comment {
-    width: 35px;
-    height: 35px;
-    border-radius: 50px;
-}
+    /* Light theme background color */
+    [data-bs-theme='light'] .post-title {
+      background-color: #c4c4c4;
+    }
 
-.comment-2 {
-    padding-left: 5px;
-}
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .post-title {
+      background-color: #343a40;
+    }
 
+    .post-content {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        margin-bottom: 5px;
+        }
 
-.custom-header {
-    background-color: #343a40;
-}
+    /* Light theme background color */
+    [data-bs-theme='light'] .post-content {
+      background-color: #c4c4c4;
+    }
 
-.top-comments {
-    padding-left: 0px;
-    padding-right: 0px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .post-content {
+      background-color: #343a40;
+    }
+
+    .post-image-content {
+        background-color: #343a40;
+        padding-top: 10px;
+        padding-left: 0px;
+        padding-right: 0px;
+        object-fit: cover;
+        }
+
+    /* Light theme background color */
+    [data-bs-theme='light'] .post-image-content {
+      background-color: #c4c4c4;
+    }
+
+    /* Dark theme background color */
+    [data-bs-theme='dark'] .post-image-content {
+      background-color: #343a40;
+    }
+
+    .carousel-inner img {
+        width: 100%;
+        height: 50vh;
+        object-fit: cover; /* or object-fit: contain; depending on your preference */
+     }
+
+    .carousel {
+        padding: 0;
+    }
+
+    .post-comments {
+        background-color: #343a40;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .post-interactions {
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 5px;
+    }
+
+        /* Light theme background color */
+        [data-bs-theme='light'] .post-interactions {
+          background-color: #c4c4c4;
+        }
+
+        /* Dark theme background color */
+        [data-bs-theme='dark'] .post-interactions {
+          background-color: #343a40;
+        }
+
+    .avatar-comment {
+        width: 35px;
+        height: 35px;
+        border-radius: 50px;
+    }
+
+    .top-comments {
+        padding-left: 0px;
+        padding-right: 0px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .read-more {
+        cursor: pointer;
+        color: #0068cf;
+    }
+
+    .read-more-content {
+        display: none;
+    }
+
+    .read-more-trigger {
+        cursor: pointer;
+        color: #4da6ff;
+    }
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -147,18 +216,19 @@ body {
 header {
   padding-left: 10px;
   padding-right: 10px;
-  color: white;
   position: relative;
 }
 
-.read-more-content {
-    display: none;
-}
+    /* Light theme background color */
+    [data-bs-theme='light'] header {
+      background-color: #c4c4c4;
+    }
 
-.read-more-trigger {
-    cursor: pointer;
-    color: #4da6ff;
-}
+    /* Dark theme background color */
+    [data-bs-theme='dark'] header {
+      background-color: #343a40;
+    }
+
 
 .left-box,
 .middle-boxes,

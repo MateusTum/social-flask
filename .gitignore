@@ -7,3 +7,4 @@ venv
 *.iml
 *.xml
 static/uploads/
+playground.py

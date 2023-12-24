@@ -16,7 +16,8 @@ app = Flask(__name__)
 limiter = Limiter(
     app=app,
     key_func=get_remote_address,
-    storage_uri="memory://",  # This example uses in-memory storage; you may want to use a more persistent storage for a production environment
+    storage_uri="memory://",
+    # This example uses in-memory storage; you may want to use a more persistent storage for a production environment
 )
 
 # TODO: Config os.environ.get('FLASK_KEY')
@@ -430,11 +431,25 @@ def examples():
 
 # ----------------------------------------------------------------------------------------------------------------------
 @app.route('/profile/<username>', methods=['GET'])
+@limiter.limit("1 per second")
 @login_required
 def show_profile(username):
     user = User.query.filter_by(username=username).scalar()
-    posts = user.posts[::-1]
-    return render_template('profile.html', user=user, posts=posts)
+    page = request.args.get('page', 1, type=int)
+    load_more = request.args.get('loadMore', type=bool)
+    posts = (Post.query.order_by(Post.created_at.desc())
+             .where(Post.status == 'active' and user in Post.authors)
+             .paginate(page=page, per_page=ROWS_PER_PAGE))
+
+    if load_more:
+        response_data = {
+            'content': render_template('more-posts.html', posts=posts),
+            'last_page': True if page == posts.pages else False,
+        }
+        return jsonify(response_data)
+
+    elif load_more is None:
+        return render_template('profile.html', user=user, posts=posts)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -504,4 +519,4 @@ def edit_profile():
 
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
