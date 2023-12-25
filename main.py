@@ -153,6 +153,30 @@ class Post(db.Model):
             print(f"Error getting filenames in {folder_path}: {e}")
             return []
 
+    def get_post_date(self):
+        dt = datetime.now()
+        creation_datetime = self.created_at
+        time_difference = dt - creation_datetime
+
+        if time_difference.days > 0:
+            if time_difference.days == 1:
+                return f"{time_difference.days} day ago"
+            else:
+                return f"{time_difference.days} days ago"
+        elif time_difference.seconds // 3600 > 0:
+            hours_ago = time_difference.seconds // 3600
+            if hours_ago == 1:
+                return f"{hours_ago} hour ago"
+            else:
+                return f"{hours_ago} hours ago"
+        else:
+            minutes_ago = time_difference.seconds // 60
+            if minutes_ago == 1:
+                return f"{minutes_ago} minute ago"
+            else:
+                return f"{minutes_ago} minutes ago"
+
+
 
 class Comment(db.Model):
     __tablename__ = "comments"

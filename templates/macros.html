@@ -86,18 +86,22 @@
             <div class="post-title d-flex col-12">
               <!-- Profile picture -->
               <div class="left-box">
-                <img class="post-avatar" src="{{ post.authors[0].profile.profile_image_path }}">
+                <a href="{{ url_for('show_profile', username=post.authors[0].username) }}">
+                  <img class="post-avatar" src="{{ post.authors[0].profile.profile_image_path }}">
+                </a>
               </div>
               <!-- Post title and Author -->
               <div class="middle-boxes">
                 <!-- Post title -->
                 <div class="middle-box">
-                  <h5>{{ post.title }}</h5>
+                  <a href="{{ url_for('show_post', post_id=post.id) }}">
+                    <h4>{{ post.title }}</h4>
+                  </a>
                 </div>
                 <!-- Post author -->
                 <div class="middle-box">
                   <span class="text-body-secondary">
-                    {{ post.authors[0].username }} on {{ post.created_at }}
+                    {{ post.authors[0].username }} {{ post.get_post_date() }}
                   </span>
                 </div>
               </div>
