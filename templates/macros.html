@@ -1,64 +1,208 @@
 {% macro post_settings(post) %}
 <div class="right-box">
-    <a href="#" class="d-block link-body-emphasis text-decoration-none"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-pencil" viewBox="0 0 16 16">
-            <path
-                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-        </svg>
-    </a>
-    <ul class="dropdown-menu text-small">
-        <li><a class="dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a></li>
-        <li>
-            <hr class="dropdown-divider">
-        </li>
+  <a href="#" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
+      viewBox="0 0 16 16">
+      <path
+        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+    </svg>
+  </a>
+  <ul class="dropdown-menu text-small">
+    <li><a class="dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a></li>
+    <li>
+      <hr class="dropdown-divider">
+    </li>
 
-        <li><a class="dropdown-item delete-post" href="#" data-post-id="{{ post.id }}">Delete Post</a></li>
-    </ul>
+    <li><a class="dropdown-item delete-post" href="#" data-post-id="{{ post.id }}">Delete Post</a></li>
+  </ul>
 </div>
 {% endmacro %}
 
 {% macro color_theme() %}
 <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-      <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
-        <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
-        <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+  <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+    aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
+    <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
+      <use href="#circle-half"></use>
+    </svg>
+    <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
+        aria-pressed="false">
+        <svg id="sun-fill" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em"
+          height="1em">
+          <path
+            d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+          <use href="#sun-fill"></use>
+        </svg>
+        Light
+        <svg class="bi ms-auto d-none" width="1em" height="1em">
+          <use href="#check2"></use>
+        </svg>
       </button>
-      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
-        <li>
-          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-            <svg id="sun-fill" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
-                <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
-                <use href="#sun-fill"></use>
-            </svg>
-            Light
-            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-            <svg id="moon-stars-fill" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
-                <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278"/>
-                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
-                <use href="#moon-stars-fill"></use>
-            </svg>
-            Dark
-            <svg class="bi ms-auto d-none" width="1em" height="1em">
-                <use href="#check2"></use>
-            </svg>
-          </button>
-        </li>
-        <li>
-          <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
-            <svg id="circle-half" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
-                <path d="M8 15A7 7 0 1 0 8 1zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16"/>
-                <use href="#circle-half"></use>
-            </svg>
-            Auto
-            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
-          </button>
-        </li>
-      </ul>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
+        aria-pressed="false">
+        <svg id="moon-stars-fill" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em"
+          height="1em">
+          <path
+            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278" />
+          <path
+            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+          <use href="#moon-stars-fill"></use>
+        </svg>
+        Dark
+        <svg class="bi ms-auto d-none" width="1em" height="1em">
+          <use href="#check2"></use>
+        </svg>
+      </button>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto"
+        aria-pressed="true">
+        <svg id="circle-half" xmlns="http://www.w3.org/2000/svg" class="bi me-2 opacity-50 theme-icon" width="1em"
+          height="1em">
+          <path d="M8 15A7 7 0 1 0 8 1zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16" />
+          <use href="#circle-half"></use>
+        </svg>
+        Auto
+        <svg class="bi ms-auto d-none" width="1em" height="1em">
+          <use href="#check2"></use>
+        </svg>
+      </button>
+    </li>
+  </ul>
 </div>
+{% endmacro %}
+
+
+{% macro generate_post(post, current_user, macros) %}
+          <!-- Post -->
+          <div class="post row justify-content-center">
+            <!-- Post top div -->
+            <div class="post-title d-flex col-12">
+              <!-- Profile picture -->
+              <div class="left-box">
+                <img class="post-avatar" src="{{ post.authors[0].profile.profile_image_path }}">
+              </div>
+              <!-- Post title and Author -->
+              <div class="middle-boxes">
+                <!-- Post title -->
+                <div class="middle-box">
+                  <h5>{{ post.title }}</h5>
+                </div>
+                <!-- Post author -->
+                <div class="middle-box">
+                  <span class="text-body-secondary">
+                    {{ post.authors[0].username }} on {{ post.created_at }}
+                  </span>
+                </div>
+              </div>
+              {% if post in current_user.posts %}
+              {{ macros.post_settings(post=post) }}
+              {% endif %}
+            </div>
+            {% if post.image %}
+            <!-- Post image div -->
+            <div class="post-image-content row col-12 justify-content-center">
+              <div id="post-{{ post.id }}-images-carousel" class="carousel slide">
+                <div class="carousel-indicators">
+                  {% for image in post.get_post_images() %}
+                  <button type="button" data-bs-target="#post-{{ post.id }}-images-carousel" data-bs-slide-to="{{ loop.index0 }}"
+                    class="active" aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+                  {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                  {% for image in post.get_post_images() %}
+                  <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename=post.image + '/' + image) }}" class="d-block w-100" alt="Post Image"
+                      data-toggle="modal" data-target="#imageModal", onclick="showOverlay(this.src)">
+                  </div>
+                  {% endfor %}D
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#post-{{ post.id }}-images-carousel"
+                  data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#post-{{ post.id }}-images-carousel"
+                  data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+            </div>
+            {% endif %}
+            <!-- Post content div -->
+            <div class="post-content row col-12 justify-content-center">
+              <!-- Post content col -->
+              <!-- Post text -->
+              <div class="col-12 text-left">
+                <div>
+                  {% if post.content|length > 1000 %}
+                  {{ post.content[:1000]|safe }}
+                  <a class="read-more" href="{{ url_for('show_post', post_id=post.id) }}">Read More</a>
+                  {% else %}
+                  {{ post.content|safe }}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <!--Display likes, comments, awards-->
+            <div class="post-interactions container col-12">
+              <div class="row text-center">
+                <div class="likes-div col-6">
+                  <form method="POST" action="{{ url_for('like_post', post_id=post.id) }}">
+                    <button type="submit" class="btn like-post-btn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill"
+                        viewBox="0 0 16 16">
+                        <path
+                          d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                      </svg>
+                      <span class="likeCount">{{ post.get_post_likes() }} Likes</span>
+                    </button>
+                  </form>
+                </div>
+                <div class="comments-div col-6">
+                  <a href="{{ url_for('add_new_comment', post_id=post.id) }}">
+                    <button class="btn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill"
+                        viewBox="0 0 16 16">
+                        <path
+                          d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15" />
+                      </svg>
+                      {{ post.get_post_comments() }} Comments
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!--Post comments div-->
+            {% if post.comments %}
+            <div class="d-flex post-comments row col-12">
+              {% for comment in post.comments %}
+              <!-- Post comment div-->
+              <div class="d-flex top-comments col-12 align-items-center">
+                <div class="d-flex comment-profile-pic col-2 align-items-center justify-content-center text-center">
+                  <img class="avatar-comment" src="{{ comment.author[0].profile.profile_image_path }}"
+                    style="max-width: 100%; height: auto;">
+                </div>
+                <div class="d-flex row col-10">
+                  <div class="col-12 mb-0">
+                    {{ comment.content|safe }}
+                  </div>
+                  <div class="col-12 mb-0">
+                    <p class="comment-date">
+                      {{ comment.author[0].username }} on {{ comment.created_at }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
 {% endmacro %}
