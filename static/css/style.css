@@ -97,7 +97,6 @@ header {
   margin-bottom: 10px;
 }
 
-.post-image-content,
 .post-comments,
 .post-interactions {
   border-radius: 10px;
@@ -110,7 +109,7 @@ header {
 
 .post-content {
   border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10pc;
+  border-bottom-left-radius: 10px;
 }
 
 .post-title,

@@ -50,14 +50,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function demo() {
-    for (let i = 0; i < 5; i++) {
-        await sleep(i * 1000);
-    }
-    console.log('Done');
+  for (let i = 0; i < 5; i++) {
+    await sleep(i * 1000);
+  }
+  console.log("Done");
+}
+
+function showOverlay(src) {
+  const modalImage = document.querySelector("#imageModal img");
+  modalImage.src = src;
+  $("#imageModal").modal("show");
 }
 
 document.addEventListener("DOMContentLoaded", function () {

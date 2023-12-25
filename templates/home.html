@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% import "macros.html" as macros %}
 {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
 <style>
     .bi {
@@ -87,6 +88,7 @@
         <!--Right column start-->
         {% include "rightcol.html" %}
     </div>
+    {{ macros.modal() }}
     {{ macros.color_theme() }}
     {% endblock %}
 
@@ -94,11 +96,4 @@
     <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>
     <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>
-    <script>
-        // Add a script to toggle the visibility of the theme dropdown content
-        document.getElementById('toggleThemeDropdown').addEventListener('click', function () {
-            var themeDropdownContent = document.getElementById('themeDropdownContent');
-            themeDropdownContent.style.display = (themeDropdownContent.style.display === 'none') ? 'block' : 'none';
-        });
-    </script>
     {% endblock %}
