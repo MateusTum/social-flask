@@ -1,6 +1,8 @@
 :root {
-  --bs-primary-light: #FFFFFF; /* Light theme background color */
-  --bs-primary-dark: #343a40;  /* Dark theme background color */
+  --bs-primary-light: #FFFFFF;
+  /* Light theme background color */
+  --bs-primary-dark: #343a40;
+  /* Dark theme background color */
 }
 
 body {
@@ -90,12 +92,20 @@ header {
   margin-bottom: 10px;
 }
 
-.post-title,
-.post-content,
 .post-image-content,
 .post-comments,
 .post-interactions {
   border-radius: 10px;
+}
+
+.post-title {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10pc;
+}
+
+.post-content {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10pc;
 }
 
 .post-title,
@@ -150,7 +160,8 @@ header {
 .carousel-inner img {
   width: 100%;
   height: 50vh;
-  object-fit: cover; /* or object-fit: contain; depending on your preference */
+  object-fit: cover;
+  /* or object-fit: contain; depending on your preference */
 }
 
 .carousel {
@@ -204,7 +215,8 @@ header {
 
 .middle-box {
   flex: 1;
-  margin: 0 5px; /* Adjust margin as needed */
+  margin: 0 5px;
+  /* Adjust margin as needed */
 }
 
 .right-box {
