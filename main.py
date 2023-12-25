@@ -32,7 +32,7 @@ from forms import (
 from funcs import generate_unique_filename
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from configs import SECRET_KEY, DATABASE_URI, DEBUG, HOST
+from config import SECRET_KEY, DATABASE_URI, DEBUG, HOST
 
 # Flask configs
 app = Flask(__name__)
