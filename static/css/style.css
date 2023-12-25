@@ -3,233 +3,187 @@
   --bs-primary-dark: #343a40;  /* Dark theme background color */
 }
 
-.feed {
-    height: 100%;
-    padding: 20px;
-    margin: 10px;
-}
-
-.profile-rows {
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .profile-rows {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .profile-rows {
-      background-color: #343a40;
-    }
-
-.quick-access {
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .quick-access {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .quick-access {
-      background-color: #343a40;
-    }
-
-.inner-left-column-row {
-    background-color: #343a40;
-    border-radius: 10px;
-}
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .inner-left-column-row {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .inner-left-column-row {
-      background-color: #343a40;
-    }
-
-.sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-}
-
-.avatar {
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 45px;
-    height: 45px;
-    border-radius: 50px;
-}
-
-
-/* POST SETTINGS */
-
-    .post-avatar {
-        margin-left: 10px;
-        margin-right: 10px;
-        width: 55px;
-        height: 55px;
-        border-radius: 100%;
-    }
-
-    .profile-picture-div {
-        padding: 5px;
-    }
-
-    .postdate {
-        color: #999;
-    }
-
-    .comment-date {
-        margin-bottom: 0;
-        color: #999;
-    }
-
-    .post {
-        margin-bottom: 10px;
-    }
-
-    .post-title {
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        padding: 10px;
-    }
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .post-title {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .post-title {
-      background-color: #343a40;
-    }
-
-    .post-content {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        margin-bottom: 5px;
-        }
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .post-content {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .post-content {
-      background-color: #343a40;
-    }
-
-    .post-image-content {
-        background-color: #343a40;
-        padding-top: 10px;
-        padding-left: 0px;
-        padding-right: 0px;
-        object-fit: cover;
-        }
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .post-image-content {
-      background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .post-image-content {
-      background-color: #343a40;
-    }
-
-    .carousel-inner img {
-        width: 100%;
-        height: 50vh;
-        object-fit: cover; /* or object-fit: contain; depending on your preference */
-     }
-
-    .carousel {
-        padding: 0;
-    }
-
-    .post-comments {
-        background-color: #343a40;
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 20px;
-    }
-
-    .post-interactions {
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 5px;
-    }
-
-        /* Light theme background color */
-        [data-bs-theme='light'] .post-interactions {
-          background-color: #c4c4c4;
-        }
-
-        /* Dark theme background color */
-        [data-bs-theme='dark'] .post-interactions {
-          background-color: #343a40;
-        }
-
-    .avatar-comment {
-        width: 35px;
-        height: 35px;
-        border-radius: 50px;
-    }
-
-    .top-comments {
-        padding-left: 0px;
-        padding-right: 0px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .read-more {
-        cursor: pointer;
-        color: #0068cf;
-    }
-
-    .read-more-content {
-        display: none;
-    }
-
-    .read-more-trigger {
-        cursor: pointer;
-        color: #4da6ff;
-    }
-
 body {
-    font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
-
+/* HEADER */
 header {
   padding-left: 10px;
   padding-right: 10px;
   position: relative;
 }
 
-    /* Light theme background color */
-    [data-bs-theme='light'] header {
-      background-color: #c4c4c4;
-    }
+/* Light theme background color */
+[data-bs-theme='light'] header {
+  background-color: #c4c4c4;
+}
 
-    /* Dark theme background color */
-    [data-bs-theme='dark'] header {
-      background-color: #343a40;
-    }
+/* Dark theme background color */
+[data-bs-theme='dark'] header {
+  background-color: #343a40;
+}
 
+/* FEED SECTION */
+.feed {
+  height: 100%;
+  padding: 20px;
+  margin: 10px;
+}
 
+/* PROFILE ROWS */
+.profile-rows,
+.quick-access,
+.inner-left-column-row {
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Light theme background color */
+[data-bs-theme='light'] .profile-rows,
+[data-bs-theme='light'] .quick-access,
+[data-bs-theme='light'] .inner-left-column-row {
+  background-color: #c4c4c4;
+}
+
+/* Dark theme background color */
+[data-bs-theme='dark'] .profile-rows,
+[data-bs-theme='dark'] .quick-access,
+[data-bs-theme='dark'] .inner-left-column-row {
+  background-color: #343a40;
+}
+
+/* STICKY */
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+/* AVATAR */
+.avatar,
+.post-avatar,
+.avatar-comment {
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 50px;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+}
+
+.post-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 100%;
+}
+
+.avatar-comment {
+  width: 35px;
+  height: 35px;
+}
+
+/* POST SETTINGS */
+.post {
+  margin-bottom: 10px;
+}
+
+.post-title,
+.post-content,
+.post-image-content,
+.post-comments,
+.post-interactions {
+  border-radius: 10px;
+}
+
+.post-title,
+.post-content,
+.post-image-content,
+.post-comments,
+.post-interactions,
+.read-more-content {
+  padding: 10px;
+}
+
+.post-title {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.post-content {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.post-image-content {
+  background-color: #343a40;
+  padding-top: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  object-fit: cover;
+}
+
+/* Light theme background color */
+[data-bs-theme='light'] .post-title,
+[data-bs-theme='light'] .post-content,
+[data-bs-theme='light'] .post-image-content,
+[data-bs-theme='light'] .post-comments,
+[data-bs-theme='light'] .post-interactions {
+  background-color: #c4c4c4;
+}
+
+/* Dark theme background color */
+[data-bs-theme='dark'] .post-title,
+[data-bs-theme='dark'] .post-content,
+[data-bs-theme='dark'] .post-image-content,
+[data-bs-theme='dark'] .post-comments,
+[data-bs-theme='dark'] .post-interactions {
+  background-color: #343a40;
+}
+
+/* CAROUSEL */
+.carousel-inner img {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover; /* or object-fit: contain; depending on your preference */
+}
+
+.carousel {
+  padding: 0;
+}
+
+/* TOP COMMENTS */
+.top-comments {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* READ MORE */
+.read-more,
+.read-more-trigger {
+  cursor: pointer;
+}
+
+.read-more {
+  color: #0068cf;
+}
+
+.read-more-content {
+  display: none;
+}
+
+.read-more-trigger {
+  color: #4da6ff;
+}
+
+/* LEFT, MIDDLE, RIGHT BOXES */
 .left-box,
 .middle-boxes,
 .right-box {
