@@ -1,15 +1,38 @@
 import os
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    flash,
+    request,
+    jsonify
+)
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
-from flask_login import UserMixin, login_user, current_user, logout_user, login_required, LoginManager
+from flask_login import (
+    UserMixin,
+    login_user,
+    current_user,
+    logout_user,
+    login_required,
+    LoginManager
+)
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import LoginForm, RegisterForm, PostForm, CommentForm, UserProfileForm
+from forms import (
+    LoginForm,
+    RegisterForm,
+    PostForm,
+    CommentForm,
+    UserProfileForm
+)
 from funcs import generate_unique_filename
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from configs import SECRET_KEY, DATABASE_URI, DEBUG, HOST
 
 # Flask configs
 app = Flask(__name__)
@@ -17,11 +40,9 @@ limiter = Limiter(
     app=app,
     key_func=get_remote_address,
     storage_uri="memory://",
-    # This example uses in-memory storage; you may want to use a more persistent storage for a production environment
 )
 
-# TODO: Config os.environ.get('FLASK_KEY')
-app.config['SECRET_KEY'] = "bacon"
+app.config['SECRET_KEY'] = SECRET_KEY
 ckeditor = CKEditor()
 ckeditor.init_app(app)
 
@@ -33,7 +54,7 @@ login_manager.init_app(app)
 Bootstrap5(app)
 
 # Database configs
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -519,4 +540,4 @@ def edit_profile():
 
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host=HOST, debug=DEBUG)
