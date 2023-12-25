@@ -228,3 +228,11 @@ header {
   justify-content: center;
   align-items: center;
 }
+
+.menu-svgs {
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 50px;
+  width: 35px;
+  height: 45px;
+}
