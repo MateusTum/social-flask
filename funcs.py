@@ -36,3 +36,18 @@ def generate_posts(db, user, post):
         db.session.add(new_post)
         user.posts.append(new_post)
         db.session.commit()
+
+def format_current_datetime(date):
+    """
+    Get the current date and time and format it as month/day/year.
+
+    Returns:
+    str: Formatted date string in the "month/day/year" format.
+    """
+    # Get the current date and time
+    current_datetime = date
+
+    # Format the date as month/day/year
+    formatted_date = current_datetime.strftime("%m/%d/%Y")
+
+    return formatted_date
