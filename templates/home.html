@@ -93,6 +93,9 @@
     {% endblock %}
 
     {% block scripts %}
+    <script>
+        var elementID = '#feed-posts';
+    </script>
     <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>
     <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>

@@ -20,7 +20,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: form.attr("action"),
-      data: form.serialize(), // Serialize the form data
+      data: form.serialize(),
       success: function (response) {
         likeCountElement.text(response.likes + " Likes");
       },
