@@ -14,11 +14,6 @@ body {
   background: var(--bs-primary-dark);
 }
 
-.like-post-btn {
-  color: #ffffff;
-  /* Set your default light theme color here */
-}
-
 /* Dark theme color override */
 .dark-theme .like-post-btn {
   color: #ffffff;
