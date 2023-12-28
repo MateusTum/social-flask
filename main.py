@@ -27,12 +27,18 @@ from forms import (
     RegisterForm,
     PostForm,
     CommentForm,
-    UserProfileForm
+    UserProfileForm,
+    CommunityForm
 )
-from funcs import generate_unique_filename
+from funcs import (
+    generate_unique_filename,
+    format_current_datetime,
+    )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from config import SECRET_KEY, DATABASE_URI, DEBUG, HOST
+import random
+import string
 
 # Flask configs
 app = Flask(__name__)
@@ -86,6 +92,15 @@ followers = db.Table('followers', db.Model.metadata,
                      db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
                      )
 
+user_community_association = db.Table('user_community_association', db.Model.metadata,
+                                 db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                                 db.Column('community_id', db.Integer, db.ForeignKey('communities.id'))
+                                 )
+                                
+post_community_association = db.Table('post_community_association', db.Model.metadata,
+                                 db.Column('community_id', db.Integer, db.ForeignKey('communities.id')),
+                                 db.Column('post_id', db.Integer, db.ForeignKey('posts.id'))
+                                 )
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -111,6 +126,7 @@ class User(db.Model, UserMixin):
         backref=db.backref('followers', lazy='dynamic'),
         lazy='dynamic'
     )
+    communities = db.Relationship("Community", secondary=user_community_association, back_populates="admins")
 
     # Dates
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -161,8 +177,10 @@ class Post(db.Model):
         if time_difference.days > 0:
             if time_difference.days == 1:
                 return f"{time_difference.days} day ago"
-            else:
+            elif time_difference.days < 7:
                 return f"{time_difference.days} days ago"
+            else:
+                return f"on {format_current_datetime(date=creation_datetime)}"
         elif time_difference.seconds // 3600 > 0:
             hours_ago = time_difference.seconds // 3600
             if hours_ago == 1:
@@ -175,7 +193,6 @@ class Post(db.Model):
                 return f"{minutes_ago} minute ago"
             else:
                 return f"{minutes_ago} minutes ago"
-
 
 
 class Comment(db.Model):
@@ -226,6 +243,24 @@ class Profile(db.Model):
 
     # Relationship
     user = db.relationship('User', back_populates='profile')
+
+    # Dates
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+
+
+class Community(db.Model):
+    __tablename__ = 'communities'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    description = db.Column(db.String(250))
+    picture = db.Column(db.String)
+
+    # Relationships
+    admins = db.Relationship("User", secondary=user_community_association, back_populates="communities")
+    posts = db.Relationship("Post", secondary=post_community_association, backref="communities_posts")
 
     # Dates
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -321,11 +356,11 @@ def register():
 def login():
     login_form = LoginForm()
     if request.method == 'POST' and login_form.validate_on_submit:
-        typed_email = request.form.get('email')
+        typed_username = request.form.get('username')
         typed_password = request.form.get('password')
-        user = db.session.query(User).filter(User.email == typed_email).scalar()
+        user = db.session.query(User).filter(User.username == typed_username).scalar()
         if not user:
-            flash('Email doesnt exist in database')
+            flash('User doesnt exist in database')
             return redirect(url_for('login'))
         elif check_password_hash(pwhash=user.password, password=typed_password):
             login_user(user)
@@ -419,20 +454,17 @@ def like_post(post_id):
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
 @login_required
 def edit_post(post_id):
-    post = Post.query.get(post_id)
-    if post:
-        if current_user in post.authors:
-            form = PostForm(title=post.title, content=post.content)
-            if form.validate_on_submit() and request.method == 'POST':
-                post.title = form.title.data
-                post.content = form.content.data
-                db.session.commit()
-                return redirect(url_for('show_post', post_id=post_id))
-            return render_template('edit-post.html', form=form)
-        else:
-            return jsonify({'error': 'Forbidden'}), 403
+    post = Post.query.get_or_404(post_id)
+    if current_user in post.authors:
+        form = PostForm(title=post.title, content=post.content)
+        if form.validate_on_submit() and request.method == 'POST':
+            post.title = form.title.data
+            post.content = form.content.data
+            db.session.commit()
+            return redirect(url_for('show_post', post_id=post_id))
+        return render_template('edit-post.html', form=form)
     else:
-        return jsonify({'error': 'Post not found'}), 404
+        return jsonify({'error': 'Forbidden'}), 403
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -463,7 +495,7 @@ def logout():
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def show_post(post_id):
-    post = Post.query.get(post_id)
+    post = Post.query.get_or_404(post_id)
     return render_template('post.html', post=post)
 
 
@@ -482,19 +514,21 @@ def show_profile(username):
     user = User.query.filter_by(username=username).scalar()
     page = request.args.get('page', 1, type=int)
     load_more = request.args.get('loadMore', type=bool)
-    posts = (Post.query.order_by(Post.created_at.desc())
-             .where(Post.status == 'active' and user in Post.authors)
-             .paginate(page=page, per_page=ROWS_PER_PAGE))
+    profile_posts = (Post.query
+                 .join(Post.authors)
+                 .filter(Post.status == 'active', User.id == user.id)
+                 .order_by(Post.created_at.desc())
+                 .paginate(page=page, per_page=ROWS_PER_PAGE))
 
     if load_more:
         response_data = {
-            'content': render_template('more-posts.html', posts=posts),
-            'last_page': True if page == posts.pages else False,
+            'content': render_template('more-posts.html', posts=profile_posts),
+            'last_page': True if page == profile_posts.pages else False,
         }
         return jsonify(response_data)
 
     elif load_more is None:
-        return render_template('profile.html', user=user, posts=posts)
+        return render_template('profile.html', user=user, profile_posts=profile_posts)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -524,42 +558,142 @@ def edit_profile():
             hobbies=user.profile.hobbies,
         )
         if form.validate_on_submit() and request.method == 'POST':
-            image = form.profile_img.data
-            if image:
-                file_extension = os.path.splitext(image.filename)[1]
+            user_profile_img = form.profile_img.data
+            if user_profile_img:
+                file_extension = os.path.splitext(user_profile_img.filename)[1]
                 unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
-                image.filename = unique_filename
-                upload_path = os.path.join(f'static/uploads/{current_user.username}/pictures/profile/', image.filename)
+                user_profile_img.filename = unique_filename
+                upload_path = os.path.join(f'static/uploads/{current_user.username}/pictures/profile/', user_profile_img.filename)
                 upload_directory = os.path.join(f'./static/uploads/{current_user.username}/pictures/profile')
                 try:
-                    image.save(upload_path)
+                    user_profile_img.save(upload_path)
                 except FileNotFoundError:
                     os.makedirs(upload_directory, exist_ok=True)
-                    image.save(upload_path)
+                    user_profile_img.save(upload_path)
+                finally:
                     user.profile.profile_image_path = "/" + upload_path
-            user.profile.bio = form.bio.data
-            user.profile.phone_number = form.phone_number.data
-            user.profile.date_of_birth = form.date_of_birth.data
-            user.profile.street_address = form.street_address.data
-            user.profile.city = form.city.data
-            user.profile.state = form.state.data
-            user.profile.postal_code = form.postal_code.data
-            user.profile.country = form.country.data
-            user.profile.gender = form.gender.data
-            user.profile.occupation = form.occupation.data
-            user.profile.company = form.company.data
-            user.profile.education = form.education.data
-            user.profile.website = form.website.data
-            user.profile.facebook_profile = form.facebook_profile.data
-            user.profile.twitter_profile = form.twitter_profile.data
-            user.profile.linkedin_profile = form.linkedin_profile.data
-            user.profile.interests = form.interests.data
-            user.profile.hobbies = form.hobbies.data
+
+            attributes_to_update = [
+            'bio', 'phone_number', 'date_of_birth', 'street_address', 'city', 'state',
+            'postal_code', 'country', 'gender', 'occupation', 'company', 'education',
+            'website', 'facebook_profile', 'twitter_profile', 'linkedin_profile',
+            'interests', 'hobbies'
+            ]
+
+            for attribute in attributes_to_update:
+                setattr(user.profile, attribute, getattr(form, attribute).data)
+                
             db.session.commit()
             return redirect(url_for('show_profile', username=user.username))
         return render_template('edit-profile.html', form=form)
     else:
         return jsonify({'error': 'Profile not found'}), 404
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/new-community', methods=['GET', 'POST'])
+@login_required
+def new_community():
+    form = CommunityForm()
+
+    if form.validate_on_submit() and request.method == 'POST':
+        new_community = Community(
+                name=request.form.get('name'),  # type: ignore
+                description=request.form.get('description'),  # type: ignore
+            )
+        db.session.add(new_community)
+        db.session.commit()
+
+        community_img = form.picture.data
+        if community_img:
+            file_extension = os.path.splitext(community_img.filename)[1]
+            unique_filename = f"{generate_unique_filename(file_extension=file_extension)}"
+            community_img.filename = unique_filename
+            upload_path = os.path.join(f'static/uploads/{new_community.name}/pictures/profile/', community_img.filename)
+            upload_directory = os.path.join(f'./static/uploads/{new_community.name}/pictures/profile')
+            try:
+                community_img.save(upload_path)
+            except FileNotFoundError:
+                os.makedirs(upload_directory, exist_ok=True)
+                community_img.save(upload_path)
+            finally:
+                new_community.picture = "/" + upload_path
+            
+        new_community.admins.append(current_user)
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    return render_template('new-community.html', form=form)
+
+    
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/communities', methods=['GET'])
+@login_required
+def show_communities():
+    communities = Community.query.order_by(Community.created_at.desc())
+
+    return render_template('communities.html', communities=communities)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/users', methods=['GET'])
+@login_required
+def show_users():
+    users = User.query.order_by(User.created_at.desc())
+
+    return render_template('users.html', users=users)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/generate-users', methods=['GET'])
+@login_required
+def generate_users():
+    def generate_random_email():
+        username = ''.join(random.choices(string.ascii_lowercase, k=8))
+        domain = random.choice(['gmail.com', 'yahoo.com', 'hotmail.com', 'example.com', 'domain.com'])
+        return f"{username}@{domain}"
+
+    def get_hashed_password():
+        crude_password = '12345678'
+        hashed_password = generate_password_hash(crude_password, method='pbkdf2:sha256', salt_length=8)
+        return hashed_password
+
+    def generate_random_data():
+        usernames = [''.join(random.choices(string.ascii_lowercase, k=8)) for _ in range(20)]
+        first_names = ['John', 'Jane', 'Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Frank', 'Grace', 'Henry', 'Ivy', 'Jack', 'Kate', 'Leo', 'Mia', 'Nick', 'Olivia', 'Peter', 'Quinn', 'Rachel']
+        last_names = ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia', 'Martinez', 'Davis']
+
+        users = []
+        for i in range(20):
+            user = User(username=usernames[i],
+             first_name=random.choice(first_names),
+              last_name=random.choice(last_names),
+               password=get_hashed_password(),
+               email=generate_random_email(),
+               role='user',
+               status='active')
+            new_user_profile = Profile()
+            user.profile = new_user_profile
+            user.profile.profile_image_path = '/static/assets/avatar.jpg'
+            users.append(user)
+
+        return users
+
+    users = generate_random_data()
+
+    db.session.add_all(users)
+    db.session.commit()
+
+    return redirect(url_for('home'))
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@app.route('/share-post/<int:post_id>', methods=['POST'])
+@login_required
+def share_post(post_id):
+    post = Post.query.get(post_id)
+
+    return jsonify({'error': 'In progress'})
 
 
 # ----------------------------------------------------------------------------------------------------------------------
