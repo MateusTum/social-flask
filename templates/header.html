@@ -13,6 +13,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser2">
             <li><a class="dropdown-item" href="{{ url_for('add_new_post') }}">New Post</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('new_community') }}">Create a Community</a></li>
             <li><a class="dropdown-item "
                 href="{{ url_for('show_profile', username=current_user.username) }}">Profile</a></li>
             <li>
