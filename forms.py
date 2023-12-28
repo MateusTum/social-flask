@@ -9,7 +9,7 @@ from PIL import Image
 
 # Login form ----------------------------------------------------
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -81,3 +81,13 @@ class UserProfileForm(FlaskForm):
     #
     #         if self.profile_img.width > max_width or self.profile_img.height > max_height:
     #             raise ValidationError(f'Image dimensions must be at most {max_width}x{max_height} pixels.')
+
+
+class CommunityForm(FlaskForm):
+
+    name = StringField('Community Name', validators=[DataRequired(), Length(max=25)])
+    description = StringField('Community Description', validators=[Length(max=250)])
+    picture = FileField('Community Picture')
+
+    submit = SubmitField("Submit")
+
