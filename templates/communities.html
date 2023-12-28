@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+Communities
+{% endblock %}
+
+{% block content %}
+<main class="mb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Creation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for community in communities %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>
+                            <a href="{{ url_for('show_post', post_id=1) }}">
+                                {{ community.name }}
+                            </a>
+                            </td>
+                            <td>{{ community.description }}</td>    
+                            <td>{{ community.created_at }}</td>    
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
