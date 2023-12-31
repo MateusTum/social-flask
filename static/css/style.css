@@ -1,25 +1,35 @@
 :root {
-  --bs-primary-light: #9dc4eb;
+  --bs-primary-light: rgb(255, 255, 255);
   /* Light theme background color */
-  --bs-primary-dark: #000000;
+  --bs-primary-dark: rgb(24, 24, 24);
   /* Dark theme background color */
   --bs-btn-color: white;
+}
+
+main {
+  min-height: 100vh;
+  height: auto;
+}
+
+[data-bs-theme='light'] .dropdown-menu{
+  --bs-dropdown-bg:#9c9c9c;
+}
+
+[data-bs-theme='dark'] .dropdown-menu{
+  --bs-dropdown-bg: #272829;
 }
 
 [data-bs-theme='light'] {
   --bs-body-bg: #ffffff;
 }
 
-body {
+[data-bs-theme='dark'] body {
   background: var(--bs-primary-dark);
 }
 
-/* Dark theme color override */
-.dark-theme .like-post-btn {
-  color: #ffffff;
-  /* Set your dark theme color here */
+[data-bs-theme='light'] body {
+  background: var(--bs-primary-light);
 }
-
 
 .liked {
   fill: red;
@@ -43,12 +53,12 @@ header {
 
 /* Light theme background color */
 [data-bs-theme='light'] header {
-  background-color: #acacac;
+  background-color: #9c9c9c;
 }
 
 /* Dark theme background color */
 [data-bs-theme='dark'] header {
-  background-color: #242424;
+  background-color: #272829;
 }
 
 /* FEED SECTION */
@@ -70,14 +80,14 @@ header {
 [data-bs-theme='light'] .profile-rows,
 [data-bs-theme='light'] .quick-access,
 [data-bs-theme='light'] .inner-left-column-row {
-  background-color: #c4c4c4;
+  background-color: #9c9c9c;
 }
 
 /* Dark theme background color */
 [data-bs-theme='dark'] .profile-rows,
 [data-bs-theme='dark'] .quick-access,
 [data-bs-theme='dark'] .inner-left-column-row {
-  background-color: #242424;
+  background-color: #272829;
 }
 
 /* STICKY */
@@ -154,7 +164,7 @@ header {
 }
 
 .post-image-content {
-  background-color: #242424;
+  background-color: rgb(24, 24, 24);
   padding-top: 10px;
   padding-left: 0px;
   padding-right: 0px;
@@ -168,7 +178,7 @@ header {
 [data-bs-theme='light'] .post-image-content,
 [data-bs-theme='light'] .post-comments,
 [data-bs-theme='light'] .post-interactions {
-  background-color: #cecece;
+  background-color: #9c9c9c;
 }
 
 /* Dark theme background color */
@@ -177,7 +187,7 @@ header {
 [data-bs-theme='dark'] .post-image-content,
 [data-bs-theme='dark'] .post-comments,
 [data-bs-theme='dark'] .post-interactions {
-  background-color: #242424;
+  background-color: #272829;
 }
 
 /* CAROUSEL */

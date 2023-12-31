@@ -6,12 +6,60 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>My Social Media</title>
+  <title>Social</title>
 
-  <!-- Load CSS from Bootstrap -->
-  {{ bootstrap.load_css() }}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet">
+  <style>
+    /* Add this to your existing CSS or create a new CSS file */
+    #welcome-content.slide,
+    #features-content.slide,
+    #contact-content.slide {
+      animation-name: slide-tilt;
+      animation-duration: 1s;
+      animation-timing-function: ease;
+    }
+
+    @keyframes slide-tilt {
+      0% {
+        opacity: 0%;
+        transform: rotate(-10deg) scale(0.25) translateX(1000px);
+      }
+
+      100% {
+        opacity: 100%;
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    #welcome-content.slide-out,
+    #features-content.slide-out,
+    #contact-content.slide-out {
+      animation-name: slide-out-tilt;
+      animation-duration: 1s;
+      animation-timing-function: ease;
+    }
+
+    @keyframes slide-out-tilt {
+      0% {
+        opacity: 100%;
+        transform: rotate(0deg) scale(1);
+      }
+
+      100% {
+        opacity: 0%;
+        transform: rotate(10deg) scale(0.25) translateX(-1000px);
+      }
+    }
+
+    .content-section {
+      display: none;
+      position: relative;
+      width: 100%;
+    }
+  </style>
 
 </head>
 
@@ -19,36 +67,185 @@
 
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-auto">
-      <div>
-        <h3 class="float-md-start mb-0">My Social Media</h3>
-        <nav class="nav nav-masthead justify-content-center float-md-end">
-          <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">Home</a>
-          <a class="nav-link fw-bold py-1 px-0 deactivated" href="#">Features</a>
-          <a class="nav-link fw-bold py-1 px-0 deactivated" href="#">Contact</a>
+        <nav class="nav nav-masthead justify-content-center float-md-none">
+          <a class="nav-link fw-bold py-1 px-0 active" href="#" data-target="welcome">Home</a>
+          <a class="nav-link fw-bold py-1 px-0" href="#" data-target="features">Features</a>
+          <a class="nav-link fw-bold py-1 px-0" href="#" data-target="contact">Contact</a>
         </nav>
-      </div>
     </header>
 
-    <main class="px-3">
-      <h1>My Social Media</h1>
-      <p class="lead">Welcome to MySocialMedia - Where Connections Thrive!</p>
-      <p class="lead">My Social Media objective is to bring back the old internet communities together, where our algorithm
-        is your algorithm.</p>
-      <p class="lead"><b>Our motto is: What, when, with!</b> You choose what you want to see, when you want to see it and
-        more importantly with who you want to share it!</p>
-      <p class="lead">Register to have access to your social media</p>
-      <p class="lead">
-        <a href="{{ url_for('login') }}" class="btn btn-lg btn-secondary ">Login</a>
-        <a href="{{ url_for('register') }}" class="btn btn-lg btn-primary fw-bold ">Register</a>
-      </p>
+    <main id="main-content" class="px-3">
+      <div id="welcome-content" class="content-section">
+        <img src="{{url_for('static', filename='assets/svgs/mysocialmedialogo.svg')}}">
+        <p class="lead">Welcome to Social!</p>
+        <p class="lead">Social's objective is to bring back the old internet communities together, where you build your
+          own algorithm</p>
+        <p class="lead">Sign-up now to have access to Social</p>
+        <p class="lead">
+          <a href="{{ url_for('authentication.login') }}" class="btn btn-lg btn-secondary ">Login</a>
+          <a href="{{ url_for('authentication.register') }}" class="btn btn-lg btn-primary fw-bold ">Sign-up</a>
+        </p>
+      </div>
+      <div id="features-content" class="content-section">
+        <section>
+          <h2>Features</h2>
+  
+          <div class="feature">
+              <h3>Create Accounts</h3>
+              <p>Join our community by creating your personalized account. Customize your profile to reflect your personality.</p>
+          </div>
+  
+          <div class="feature">
+              <h3>Share Images and Videos</h3>
+              <p>Express yourself through visual content. Share images and videos with your friends and followers.</p>
+          </div>
+  
+          <div class="feature">
+              <h3>Chat with Friends</h3>
+              <p>Stay connected with your friends through our intuitive chat system. Have private conversations or create group chats.</p>
+          </div>
+  
+          <div class="feature">
+              <h3>Create Groups</h3>
+              <p>Form communities around shared interests. Create and join groups to connect with like-minded individuals.</p>
+          </div>
+  
+          <div class="feature">
+              <h3>Control Your Feed</h3>
+              <p>Take control of your experience. Customize your feed by adjusting the algorithm to see content that matters most to you.</p>
+          </div>
+        </section>
+      </div>
+      <div id="contact-content" class="content-section">
+        <h1>Contact Us</h1>
+        <section>
+          <p>Thank you for visiting <strong>Your Company Name</strong>! We value your feedback, inquiries, and suggestions. Please feel free to get in touch with us using the contact information below.</p>
+  
+          <h2>General Inquiries:</h2>
+          <p>Email: <a href="mailto:info@yourcompany.com">info@yourcompany.com</a></p>
+          <p>Phone: +123-456-7890</p>
+  
+          <h2>Customer Support:</h2>
+          <p>Email: <a href="mailto:support@yourcompany.com">support@yourcompany.com</a></p>
+          <p>Phone: +123-456-7890</p>
+  
+          <h2>Business Inquiries:</h2>
+          <p>Email: <a href="mailto:partnerships@yourcompany.com">partnerships@yourcompany.com</a></p>
+          <p>Phone: +123-456-7890</p>
+  
+          <h2>Address:</h2>
+          <p>
+            Social<br>
+              Street Address<br>
+              City, State, ZIP Code<br>
+              Country
+          </p>
+          <p>We appreciate your interest in <strong>Social</strong> and look forward to hearing from you!</p>
+      </section>
+      </div>
     </main>
 
     <footer class="mt-auto text-white-50">
-      <p>&copy; 2023 My Social Media. All rights reserved.</p>
+      <p>&copy; 2024 Social. All rights reserved.</p>
     </footer>
   </div>
 
-  {{ bootstrap.load_js() }}
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+  <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+  
+    navLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        if ($(this).hasClass("active")) {
+          return;
+        }
+        if (animationInProgress) {
+          return;
+        }
+        event.preventDefault();
+  
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+        });
+  
+        this.classList.add('active');
+      });
+    });
+  </script>
+
+<script>
+    $(document).ready(function () {
+    $("#welcome-content").show();
+    $("#welcome-content").toggleClass("displayed");
+  });
+
+  function slideSectionInAndOut($section) {
+    $section.show().toggleClass("slide")
+      .delay(900)
+      .queue(function (next) {
+        if ($section.hasClass("slide")) {
+          $section.removeClass("slide");
+          animationInProgress = false;
+        }
+        next();
+      });
+  };
+
+  function slideSectionOut(sectionId) {
+    var $section = $("#" + sectionId);
+    $section.addClass("slide-out").delay(900).queue(function (next) {
+      $section.removeClass("slide-out").hide().removeClass("displayed");
+      next();
+    });
+  }
+
+  function addDisplayed(target) {
+    var $section = $(target);
+    $section.toggleClass("displayed");
+  }
+
+  var animationInProgress = false;
+
+  $(".nav-link").on("click", function () {
+    if (animationInProgress) {
+        return;
+      }
+
+    var target = $(this).data("target");
+    var displayedDivId = $(".displayed").attr("id");
+
+    if (target === "welcome") {
+      var displayedDiv = "#welcome-content";
+      var target = $(".nav-link[data-target]").data("target");
+      slideSectionOut(displayedDivId);
+      setTimeout(function () {
+        slideSectionInAndOut($("#welcome-content"));
+        addDisplayed(displayedDiv);
+      }, 1000);
+    } else if (target === "features") {
+      var displayedDiv = "#features-content";
+      slideSectionOut(displayedDivId);
+      setTimeout(function () {
+        slideSectionInAndOut($("#features-content"));
+        addDisplayed(displayedDiv);
+      }, 1000);
+    } else if (target === "contact") {
+      var displayedDiv = "#contact-content";
+      slideSectionOut(displayedDivId);
+      setTimeout(function () {
+        slideSectionInAndOut($("#contact-content"));
+        addDisplayed(displayedDiv);
+      }, 1000);
+    }
+    animationInProgress = true;
+  });
+  
+</script>
 
 </body>
 

@@ -24,7 +24,7 @@
     </li>
     <li><a class="dropdown-item report-post disabled" href="#" data-post-id="{{ post.id }}">Report post</a></li>
     {% if post in current_user.posts %}
-    <li><a class="dropdown-item" href="{{ url_for('edit_post', post_id=post.id) }}">Edit post</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('posts.edit_post', post_id=post.id) }}">Edit post</a></li>
     <li>
       <hr class="dropdown-divider">
     </li>
@@ -102,7 +102,7 @@
   <div class="post-title d-flex col-12">
     <!-- Profile picture -->
     <div class="left-box">
-      <a href="{{ url_for('show_profile', username=post.authors[0].username) }}">
+      <a href="{{ url_for('users.show_profile', username=post.authors[0].username) }}">
         <img class="post-avatar" src="{{ post.authors[0].profile.profile_image_path }}">
       </a>
     </div>
@@ -110,7 +110,7 @@
     <div class="middle-boxes">
       <!-- Post title -->
       <div class="middle-box">
-        <a href="{{ url_for('show_post', post_id=post.id) }}">
+        <a href="{{ url_for('posts.show_post', post_id=post.id) }}">
           <h4>{{ post.title }}</h4>
         </a>
       </div>
@@ -157,7 +157,7 @@
       <div>
         {% if post.content|length > 1000 %}
         {{ post.content[:1000]|safe }}
-        <a class="read-more" href="{{ url_for('show_post', post_id=post.id) }}">Read More</a>
+        <a class="read-more" href="{{ url_for('posts.show_post', post_id=post.id) }}">Read More</a>
         {% else %}
         {{ post.content|safe }}
         {% endif %}
@@ -169,7 +169,7 @@
   <div class="post-interactions container col-12">
     <div class="row text-center">
       <div class="likes-div col-4">
-        <form method="POST" action="{{ url_for('like_post', post_id=post.id) }}">
+        <form method="POST" action="{{ url_for('posts.like_post', post_id=post.id) }}">
           <a class="btn like-post-btn" role="button">
             {% if post in current_user.likes %}
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -189,7 +189,7 @@
         </form>
       </div>
       <div class="comments-div col-4">
-        <a href="{{ url_for('add_new_comment', post_id=post.id) }}">
+        <a href="{{ url_for('posts.add_new_comment', post_id=post.id) }}">
           <a class="btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="mt-1 bi bi-chat-fill" viewBox="0 0 16 16">
@@ -198,9 +198,10 @@
             </svg>
             {{ post.get_post_comments() }} Comments
           </a>
+        </a>
       </div>
       <div class="shares-div col-4">
-        <a href="{{ url_for('share_post', post_id=post.id) }}">
+        <a href="{{ url_for('posts.share_post', post_id=post.id) }}">
           <a class="btn disabled">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="mr-1 bi bi-share-fill" viewBox="0 0 16 16">

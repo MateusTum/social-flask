@@ -1,9 +1,9 @@
 <header class="border-bottom">
   <nav class="navbar navbar-expand-md">
     <div class="container-fluid">
-
-      <a class="navbar-brand" href="{{ url_for('home') }}">My Social Media</a>
-
+      <a class="navbar-logo" href="{% if current_user.is_authenticated %}{{ url_for('home.home') }}{% else %}{{ url_for('cover.cover') }}{% endif %}" >
+        <img id="logo" src="{{ url_for('static', filename='assets/svgs/logoonly.svg') }}">
+      </a>
       {% if current_user.is_authenticated %}
       <div class="ml-auto">
         <div class="flex-shrink-0 dropdown">
@@ -12,18 +12,18 @@
             <img src="{{ current_user.profile.profile_image_path }}" alt="User profile picture" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser2">
-            <li><a class="dropdown-item" href="{{ url_for('add_new_post') }}">New Post</a></li>
-            <li><a class="dropdown-item" href="{{ url_for('new_community') }}">Create a Community</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('posts.add_new_post') }}">New Post</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('community.create_community') }}">Create a Community</a></li>
             <li><a class="dropdown-item "
-                href="{{ url_for('show_profile', username=current_user.username) }}">Profile</a></li>
+                href="{{ url_for('users.show_profile', username=current_user.username) }}">Profile</a></li>
             <li>
             <li><a class="dropdown-item "
-                href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+                href="{{ url_for('users.edit_profile') }}">Edit Profile</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item disabled" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sign out</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('authentication.logout') }}">Sign out</a></li>
           </ul>
         </div>
       </div>

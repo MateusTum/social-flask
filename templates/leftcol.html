@@ -3,7 +3,7 @@
         <div class="custom-left-column col-12">
             <!-- Content for left column goes here -->
             <div class="row mx-md-auto profile-rows justify-content-center">
-                <a href="{{ url_for('show_profile', username=current_user.username) }}" class="row btn d-flex">
+                <a href="{{ url_for('users.show_profile', username=current_user.username) }}" class="row btn d-flex">
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="avatar" src="{{ current_user.profile.profile_image_path }}">
                     </div>
@@ -15,7 +15,7 @@
             </div>
             <div class="row mx-md-auto quick-access justify-content-center">
                 <!-- Communities -->
-                <a href="{{ url_for('show_communities') }}" class="row btn d-flex">
+                <a href="{{ url_for('community.show_communities') }}" class="row btn d-flex">
                     <!-- Communities Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="menu-svgs" src="{{ url_for('static', filename='assets/svgs/houses-fill.svg') }}" alt="Communities SVG">
@@ -26,7 +26,7 @@
                     </div>
                 </a>
                 <!-- Users -->
-                <a href="{{ url_for('show_users') }}" class="row btn d-flex">
+                <a href="{{ url_for('admin.show_users') }}" class="row btn d-flex">
                     <!-- Users Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="menu-svgs" src="{{ url_for('static', filename='assets/svgs/people-fill.svg') }}" alt="Friends SVG">
@@ -39,7 +39,7 @@
             </div>
             <div class="row mx-md-auto inner-left-column-row justify-content-center">
                 <!-- Chat -->
-                <a href="{{ url_for('show_post', post_id=1) }}" class="row btn d-flex">
+                <a href="{{ url_for('posts.show_post', post_id=1) }}" class="row btn d-flex">
                     <!-- Chat Icon -->
                     <div class="col-3 profile-picture-div d-flex justify-content-center">
                         <img class="menu-svgs" src="{{ url_for('static', filename='assets/svgs/chat-fill.svg') }}" alt="Chat SVG">

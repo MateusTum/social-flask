@@ -90,4 +90,3 @@ class CommunityForm(FlaskForm):
     picture = FileField('Community Picture')
 
     submit = SubmitField("Submit")
-

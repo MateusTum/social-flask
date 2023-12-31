@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 {% block title %}
-{{ user.first_name }} {{ user.last_name }}
+{{ community.name }}
 {% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 <style>
-  .bi {
-        vertical-align: -.125em;
-    }
-
   .profile-header {
     position: relative;
     text-align: center;
@@ -75,7 +71,7 @@
   }
 
   .profile-personal-info {
-    background-color: #272829;
+    background-color: #343a40;
     border-radius: 10px;
     padding: 10px;
     margin-right: 10px;
@@ -89,10 +85,8 @@
     position: relative;
     width: 100%;
     padding-bottom: 100%;
-    /* 1:1 Aspect Ratio */
   }
 
-  /* Style for the images */
   .image-div img {
     position: absolute;
     object-fit: cover;
@@ -103,11 +97,6 @@
   .card {
     padding: 0;
   }
-
-  #profile-relations {
-    background-color: #272829;
-    border-radius: 10px;
-  }
 </style>
 
 {% endblock %}
@@ -116,35 +105,37 @@
 <div class="row justify-content-around align-items-center">
   <div class="container-flex col-lg-8 col-md-8">
     <div class="row col-8 bg-div">
-      <div class="fade-overlay"></div>
+      <div class="fade-overlay container-fluid"></div>
       <img src="{{ url_for('static', filename='assets/bg.jpg') }}" class="background-img">
     </div>
     <div class="profile-header">
-      <img src="{{ user.profile.profile_image_path }}" alt="Profile Picture" class="img-fluid profile-picture">
-      <h1 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h1>
-    </div>
-    <div class="container-fluid row justify-content-center">
-      <div id="profile-relations" class="row col-4 justify-content-center text-center">
-        <div class="col-3">
-          <a href="#">Followers: {{ followers|length }}</a>
-        </div>
-        <div class="col-3 mb-0">
-          <a href="#">Following: {{ following|length }}</a>
-        </div>
-      </div>
+      <img src="{{ community.picture }}" alt="Profile Picture" class="img-fluid profile-picture">
+      <h1 class="profile-name">{{ community.name }}
+        {% if current_user == user %}
+        <a class="btn" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square"
+            viewBox="0 0 16 16">
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+            <path fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+          </svg>
+        </a>
+        {% endif %}
+      </h1>
     </div>
     <div class="container d-flex justify-content-around">
       <div class="profile-info-container container-flex row col-3 justify-content-center d-none d-md-block">
         <div class="profile-personal-info row col-12 justify-content-center">
-          <div id="user-pictures" class="row col-12 justify-content-around text-center">
-            <h5><a href="#">{{ user.first_name }}'s pictures</a></h5>
-            {% for post in profile_posts %}
+          <div id="user-pictures" class="row col-12 justify-content-around">
+            <h5>Pictures</h5>
+            {% for post in community.posts %}
               {% if post.image %}
                 {% for image in post.get_post_images() %}
                   {% if not loop.index0 == 3 %}
                     <div class="card col-lg-6 col-md-12">
                       <div class="image-div ">
-                        <a href="{{ url_for('posts.show_post', post_id=post.id) }}">
+                        <a href="{{ url_for('show_post', post_id=post.id) }}">
                           <img class="card-img-top" src="{{ url_for('static', filename=post.image + '/' + image) }}">
                         </a>
                       </div>
@@ -166,6 +157,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 {{ macros.modal() }}

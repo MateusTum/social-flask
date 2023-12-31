@@ -64,16 +64,6 @@
         {% include "leftcol.html" %}
         <!--Center column start-->
         <div class="center-column col-lg-5 col-md-8">
-            <div class="row text-center">
-                <div class="col">
-                    <a class="
-                        btn
-                        btn-primary
-                        " href="{{ url_for('add_new_post') }}" id="create-post">
-                        <span>New Post</span>
-                    </a>
-                </div>
-            </div>
             <div>
                 <hr>
             </div>
@@ -90,7 +80,7 @@
     {{ macros.modal() }}
     {{ macros.color_theme() }}
     {% endblock %}
-
+</div>
     {% block scripts %}
     <script>
         var elementID = '#feed-posts';
