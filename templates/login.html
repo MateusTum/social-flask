@@ -1,27 +1,61 @@
-{% from "bootstrap5/form.html" import render_form %}
+{% from "bootstrap5/form.html" import render_field %}
 {% extends "base.html" %}
 
 {% block title %}
 Login
 {% endblock %}
 
+{% block styles %}
+<style>
+  #social-logo-svg {
+      width: auto;
+      height: auto;
+      margin-top: 20px;
+  }
+
+  #login-form {
+      background-color: rgb(43, 43, 43);
+      border-radius: 10px;
+      padding: 10px;
+      position: relative;
+  }
+</style>
+{% endblock %}
 {% block content %}
-<main>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <!--Registration form render-->
-        {{ render_form(login_form) }}
-        <!--flash messages-->
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <p class="flash">{{ message }}</p>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center">
+          <div class="row justify-content-center">
+              <img id="social-logo-svg" src="{{url_for('static', filename='assets/svgs/mysocialmedialogo.svg')}}">
+          </div>
+          <div id="login-form" class="row d-flex flex-column align-items-center mt-2 mb-2">
+              <form method="post" class="col-12">
+                  {{ login_form.csrf_token() }}
+                  {{ render_field(login_form.username, placeholder='Your Username') }}
+                  {{ render_field(login_form.password, placeholder='Your Password') }}
+                  <div class="d-flex justify-content-center mb-2">
+                      {{ render_field(login_form.submit) }}
+                  </div>
+              </form>
+              <!-- Registration form render -->
+              <!-- flash messages -->
+              {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                      {% for message in messages %}
+                          <p class="flash">{{ message }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endwith %}
+          </div>
+          <div class="row d-flex flex-column colg-md-3 col-sm-4 align-items-center">
+              <a class="text-primary mb-2 disabled text-center" href="#">
+                  Forgot password?
+              </a>
+              <a class="btn btn-success" href="{{url_for('authentication.register')}}">
+                  Create account
+              </a>
+          </div>
       </div>
-    </div>
   </div>
-</main>
+</div>
 {% endblock %}
