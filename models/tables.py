@@ -147,6 +147,31 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+    def get_comment_date(self):
+        dt = datetime.now()
+        creation_datetime = self.created_at
+        time_difference = dt - creation_datetime
+
+        if time_difference.days > 0:
+            if time_difference.days == 1:
+                return f"{time_difference.days} day ago"
+            elif time_difference.days < 7:
+                return f"{time_difference.days} days ago"
+            else:
+                return f"on {format_current_datetime(date=creation_datetime)}"
+        elif time_difference.seconds // 3600 > 0:
+            hours_ago = time_difference.seconds // 3600
+            if hours_ago == 1:
+                return f"{hours_ago} hour ago"
+            else:
+                return f"{hours_ago} hours ago"
+        else:
+            minutes_ago = time_difference.seconds // 60
+            if minutes_ago == 1:
+                return f"{minutes_ago} minute ago"
+            else:
+                return f"{minutes_ago} minutes ago"
+
 
 class Profile(db.Model):
     __tablename__ = 'profile'
