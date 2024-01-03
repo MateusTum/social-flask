@@ -18,7 +18,7 @@
     #features-content.slide,
     #contact-content.slide {
       animation-name: slide-tilt;
-      animation-duration: 1s;
+      animation-duration: 0.5s;
       animation-timing-function: ease;
     }
 
@@ -38,7 +38,7 @@
     #features-content.slide-out,
     #contact-content.slide-out {
       animation-name: slide-out-tilt;
-      animation-duration: 1s;
+      animation-duration: 0.5s;
       animation-timing-function: ease;
     }
 
@@ -198,7 +198,7 @@
 
   function slideSectionOut(sectionId) {
     var $section = $("#" + sectionId);
-    $section.addClass("slide-out").delay(900).queue(function (next) {
+    $section.addClass("slide-out").delay(400).queue(function (next) {
       $section.removeClass("slide-out").hide().removeClass("displayed");
       next();
     });
@@ -226,21 +226,21 @@
       setTimeout(function () {
         slideSectionInAndOut($("#welcome-content"));
         addDisplayed(displayedDiv);
-      }, 1000);
+      }, 500);
     } else if (target === "features") {
       var displayedDiv = "#features-content";
       slideSectionOut(displayedDivId);
       setTimeout(function () {
         slideSectionInAndOut($("#features-content"));
         addDisplayed(displayedDiv);
-      }, 1000);
+      }, 500);
     } else if (target === "contact") {
       var displayedDiv = "#contact-content";
       slideSectionOut(displayedDivId);
       setTimeout(function () {
         slideSectionInAndOut($("#contact-content"));
         addDisplayed(displayedDiv);
-      }, 1000);
+      }, 500);
     }
     animationInProgress = true;
   });
