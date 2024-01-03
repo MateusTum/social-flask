@@ -51,9 +51,17 @@ function loadContent(elementID) {
    * @returns {void}
    * @inner
    */
-  const queryParams = new URLSearchParams({ page, loadMore });
+  if (typeof isUserProfile !== 'undefined') {
+    var queryParams = new URLSearchParams({
+      page,
+      loadMore,
+      isUserProfile,
+      profileUsername,
+    });
+  } else {
+    var queryParams = new URLSearchParams({ page, loadMore });
+  }
   var apiUrl = "/home?" + queryParams;
-
   if (isLoading) {
     return;
   }

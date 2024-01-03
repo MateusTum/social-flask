@@ -3,57 +3,6 @@
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
-<style>
-    .bi {
-        vertical-align: -.125em;
-    }
-
-    .btn-bd-primary {
-        --bs-btn-font-weight: 600;
-        --bs-btn-color: var(--bs-white);
-        --bs-btn-bg: var(--bd-green-bg);
-        --bs-btn-border-color: var(--bd-green-bg);
-        --bs-btn-hover-color: var(--bs-white);
-        --bs-btn-hover-bg: #388e3c;
-        --bs-btn-hover-border-color: #388e3c;
-        --bs-btn-focus-shadow-rgb: var(--bd-green-rgb);
-        --bs-btn-active-color: var(--bs-btn-hover-color);
-        --bs-btn-active-bg: #2e7d32;
-        --bs-btn-active-border-color: #2e7d32;
-    }
-
-    /* Light theme background color */
-    [data-bs-theme='light'] .btn-bd-primary {
-        background-color: #c4c4c4;
-    }
-
-    /* Dark theme background color */
-    [data-bs-theme='dark'] .btn-bd-primary {
-        background-color: #343a40;
-    }
-
-    .bd-mode-toggle {
-        z-index: 1500;
-    }
-
-    .bd-mode-toggle .dropdown-menu .active .bi {
-        display: block !important;
-    }
-
-    .custom-left-column {
-        height: 100%;
-        margin: 10px;
-    }
-
-    .center-column {
-        margin-top: 10px;
-    }
-
-    .custom-right-column {
-        height: 100%;
-        margin: 10px;
-    } 
-</style>
 {% endblock %}
 
 {% block content %}
@@ -63,15 +12,14 @@
         <!--Left column start-->
         {% include "leftcol.html" %}
         <!--Center column start-->
-        <div class="center-column col-lg-5 col-md-8">
-            <div>
-                <hr>
-            </div>
-            <div id="feed-posts" class="row justify-content-center home-feed">
+        <div class="center-column p-0 col-sm-12 col-md-8 col-lg-8 col-xl-6">
+            <div class="justify-content-center">
                 <!--Content for center column goes here -->
+                <ol id="feed-posts">
                 {% for post in posts %}
                     {{ macros.generate_post(post=post, current_user=current_user, macros=macros) }}
                 {% endfor %}
+                </ol>
             </div>
         </div>
         <!--Right column start-->
@@ -84,6 +32,19 @@
     {% block scripts %}
     <script>
         var elementID = '#feed-posts';
+    </script>
+    <script>
+        $(document).ready(function () {
+            var stickyDivOffset = $(".sticky").offset().top;
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > stickyDivOffset) {
+                    $(".sticky").addClass("fixed");
+                } else {
+                    $(".sticky").removeClass("fixed");
+                }
+            });
+        });
     </script>
     <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>
     <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
