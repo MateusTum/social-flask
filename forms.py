@@ -90,3 +90,8 @@ class CommunityForm(FlaskForm):
     picture = FileField('Community Picture')
 
     submit = SubmitField("Submit")
+
+
+class FollowForm(FlaskForm):
+    user_id = StringField('User ID', validators=[DataRequired()])
+    submit = SubmitField('Follow')

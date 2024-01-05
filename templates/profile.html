@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_field %}
 {% block title %}
 {{ user.first_name }} {{ user.last_name }}
 {% endblock %}
@@ -6,7 +7,9 @@
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 <style>
-  .bi { vertical-align: -.125em; }
+  .bi {
+    vertical-align: -.125em;
+  }
 
   .profile-header {
     position: relative;
@@ -57,19 +60,25 @@
     font-size: 24px;
   }
 
-  .feed, .card {
+  .feed,
+  .card {
     padding: 0;
   }
 
-  h1 { font-weight: 700; }
+  h1 {
+    font-weight: 700;
+  }
 
-  .profile-personal-info, #profile-information {
+  .profile-personal-info,
+  #profile-information {
     background-color: #030303;
     border-radius: 10px;
     padding: 10px;
   }
 
-  .profile-info-container { margin-top: 10px; }
+  .profile-info-container {
+    margin-top: 10px;
+  }
 
   .image-div {
     position: relative;
@@ -107,12 +116,12 @@
         <img src="{{ user.profile.profile_image_path }}" alt="Profile Picture" class="img-fluid profile-picture">
         <h1 class="profile-name">{{ user.username }}</h1>
         <!-- Btn group for profile edition and full profile -->
-        <div class="btn-group">
+        <div class="btn-group" role="group">
           {% if current_user == user %}
           <!-- Anchor tag (btn) to edit profile -->
           <a class="btn btn-secondary" href="{{ url_for('users.edit_profile') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
-              class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square"
+              viewBox="0 0 16 16">
               <path
                 d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
               <path fill-rule="evenodd"
@@ -124,26 +133,31 @@
           <a class="btn btn-secondary">
             Show info
           </a>
-          <!-- Anchor tag (btn) to follow user -->
-          <form class="follow-form" method="POST" action="{{ url_for('users.follow_user', user_id_to_follow=user.id) }}">
-              <a class="btn btn-success" role="button">
-                {% if current_user in user.followers.all() %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white" class="follow-svg bi bi-person-check-fill"
-                  viewBox="0 0 16 16">
+          <button class="btn btn-success" form="follow-form" type="submit">
+            <form id="follow-form" class="follow-form" method="POST"
+              action="{{ url_for('users.follow_user', user_id_to_follow=user.id) }}">
+              {{ form.hidden_tag() }}
+              {% if current_user in user.followers.all() %}
+              <div id="followIconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
+                  class="follow-svg bi bi-person-check-fill" viewBox="0 0 16 16">
                   <path fill-rule="evenodd"
                     d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
                   <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                 </svg>
-                {% else %}
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white" class="follow-svg bi bi-person-fill-add"
-                  viewBox="0 0 16 16">
+              </div>
+              {% else %}
+              <div id="followIconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
+                  class="follow-svg bi bi-person-fill-add" viewBox="0 0 16 16">
                   <path
                     d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                   <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />
                 </svg>
-                {% endif %}
-              </a>
-          </form>
+              </div>
+              {% endif %}
+            </form>
+          </button>
         </div>
       </div>
     </div>
@@ -154,20 +168,16 @@
         <div class="row col-12 d-flex justify-content-center">
           <div class="row">
             <div class="col-6 text-center">
-                <a href="#" class="d-flex flex-column align-items-center">
-                    <span class="font-weight-bolder"
-                    style="font-size: 1.3em"
-                    >{{ following|length }}</span>
-                    <span>Following</span>
-                </a>
+              <a href="#" class="d-flex flex-column align-items-center">
+                <span class="font-weight-bolder" style="font-size: 1.3em">{{ following|length }}</span>
+                <span>Following</span>
+              </a>
             </div>
             <div class="col-6 text-center">
-                <a href="#" class="d-flex flex-column align-items-center">
-                    <span class="font-weight-bolder"
-                    style="font-size: 1.3em"
-                    >{{ followers|length }}</span>
-                    <span>Followers</span>
-                </a>
+              <a href="#" class="d-flex flex-column align-items-center">
+                <span class="font-weight-bolder" style="font-size: 1.3em">{{ followers|length }}</span>
+                <span>Followers</span>
+              </a>
             </div>
           </div>
         </div>
@@ -232,11 +242,9 @@
           <span> From: {{ user.profile.country }}</span>
           <hr>
           <iframe id="spotifyIframe" style="border-radius:5%"
-            src="https://open.spotify.com/embed/track/0hZw4WGvobBufZ2rveQST8?si=004b739c20904e0e" 
-            width="100%"
-            height="352" 
-            frameBorder="0"
-            allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+            src="https://open.spotify.com/embed/track/0hZw4WGvobBufZ2rveQST8?si=004b739c20904e0e" width="100%"
+            height="352" frameBorder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
           </iframe>
         </div>
       </div>
@@ -261,10 +269,8 @@
 
 {% endblock %}
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/posts.js') }}"></script>
-<script>
-  // TODO: ADD FOLLOW USER JS CODE 
-</script>
+<script src=" {{ url_for('static', filename='js/posts.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/follow-user.js') }}"></script>
 <script>
   // This is the variable used to store the elementID where more posts from posts-dynamic-loading.js are loaded
   var elementID = '#profile-feed';

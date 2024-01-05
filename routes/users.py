@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, redirect, url_for, render_template, request, jsonify
 from flask_login import current_user, login_required
-from forms import UserProfileForm
+from forms import UserProfileForm, FollowForm
 from funcs import generate_unique_filename
 from config import ROWS_PER_PAGE
 from models import db
@@ -72,20 +72,37 @@ def edit_profile():
 @bp.route('/follow/<int:user_id_to_follow>', methods=['POST'])
 @login_required
 def follow_user(user_id_to_follow):
+    form = FollowForm(user_id=user_id_to_follow)
     user_to_follow = User.query.get_or_404(user_id_to_follow)
-    if current_user in user_to_follow.followers.all():
-        current_user.followed.remove(user_to_follow)
-        db.session.commit()
-        return jsonify({"message": f"You have unfollowed {user_to_follow.username}"}), 200
-    else:
-        current_user.followed.append(user_to_follow)
-        db.session.commit()
-        return jsonify({"message": f"You are now following {user_to_follow.username}"}), 200
+    if form.validate_on_submit():
+        if current_user in user_to_follow.followers.all():
+            current_user.followed.remove(user_to_follow)
+            db.session.commit()
+            return jsonify(
+                {
+                "message": f"You have unfollowed {user_to_follow.username}",
+                "following_status": False
+                }
+                ), 200
+        else:
+            current_user.followed.append(user_to_follow)
+            db.session.commit()
+            return jsonify(
+                {
+                "message": f"You are now following {user_to_follow.username}",
+                "following_status": True
+                }
+                ), 200
+
+    # If form validation fails, return an error response
+    return jsonify({'error': 'Invalid form data'}), 400
+
 
 
 @bp.route('/profile/<username>', methods=['GET'])
 @login_required
 def show_profile(username):
+    form = FollowForm(request.form)
     user = User.query.filter_by(username=username).scalar()
     followers = user.followers.all()
     following = user.followed.all()
@@ -106,4 +123,4 @@ def show_profile(username):
 
     elif load_more is None:
         return render_template('profile.html', user=user, profile_posts=profile_posts, followers=followers,
-                               following=following)
+                               following=following, form=form)
