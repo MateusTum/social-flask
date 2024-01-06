@@ -1,6 +1,5 @@
-var loadMore = true;
-var page = 2;
-let isLoading = false;
+let loadMore = true;
+let page = 2;
 
 /**
  * Initializes a scroll event listener to trigger the loading of more content when the user scrolls.
@@ -26,13 +25,14 @@ $(document).ready(function () {
   $(window).scroll(function () {
     if (
       $(window).scrollTop() + $(window).height() >=
-        $(document).height() - 200 &&
+        $(document).height() - 1 &&
       loadMore
     ) {
       loadContent(elementID);
     }
   });
 });
+
 
 /**
  * Appends loaded posts to a specified HTML element.
@@ -51,22 +51,17 @@ function loadContent(elementID) {
    * @returns {void}
    * @inner
    */
+
   if (typeof isUserProfile !== 'undefined') {
     var queryParams = new URLSearchParams({
       page,
-      loadMore,
       isUserProfile,
       profileUsername,
     });
   } else {
-    var queryParams = new URLSearchParams({ page, loadMore });
+    var queryParams = new URLSearchParams({ page });
   }
-  var apiUrl = "/home?" + queryParams;
-  if (isLoading) {
-    return;
-  }
-
-  isLoading = true;
+  var apiUrl = "/posts/load-posts?" + queryParams;
 
   $.ajax({
     url: apiUrl,

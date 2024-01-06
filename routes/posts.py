@@ -4,7 +4,8 @@ from flask import Blueprint, redirect, url_for, render_template, request, jsonif
 from forms import PostForm, CommentForm
 from funcs import generate_unique_filename
 from models import db
-from models.tables import Post, Comment
+from models.tables import Post, Comment, User
+from config import ROWS_PER_PAGE
 
 bp = Blueprint('posts', __name__)
 
@@ -134,3 +135,30 @@ def add_new_comment(post_id):
         db.session.commit()
         return redirect(url_for("home.home"))
     return render_template("new-comment.html", create_comment_form=create_comment_form)
+
+
+@bp.route("/load-posts", methods=['GET'])
+@login_required
+def load_posts():
+    page = request.args.get('page', 1, type=int)
+    is_user_profile = request.args.get('isUserProfile', type=bool)
+
+    posts = (Post.query
+    .order_by(Post.created_at.desc())
+    .filter(Post.status == 'active')
+    .paginate(page=page, per_page=ROWS_PER_PAGE))
+
+    if is_user_profile == True:
+        profileUsername = request.args.get('profileUsername', type=str)
+        user = User.query.filter_by(username=profileUsername).scalar()
+        posts = (Post.query
+        .order_by(Post.created_at.desc())
+        .filter(Post.status == 'active', Post.authors.contains(user))
+        .paginate(page=page, per_page=ROWS_PER_PAGE))
+
+    response_data = {
+        'content': render_template('more-posts.html', posts=posts),
+        'last_page': True if page == posts.pages else False,
+    }
+
+    return jsonify(response_data)
