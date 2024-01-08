@@ -198,9 +198,9 @@
   <div class="post-interactions col-12">
     <div class="row text-start">
       <div class="likes-div col-6">
-        <div class="btn-group">
+        <div>
           <a class="btn btn-outline-secondary like-post-btn"
-            style="border-bottom-left-radius: 10px; border-top-left-radius: 10px;" role="button"
+            style="border-radius: 20%" role="button"
             data-post-id="{{ post.id }}">
             {% if post in current_user.likes %}
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
@@ -217,7 +217,7 @@
             {% endif %}
             <span class="ml-1 likeCount">{{ post.get_post_likes() }}</span>
           </a>
-          <a class="btn btn-outline-secondary" style="border-bottom-right-radius: 25%; border-top-right-radius: 25%;"
+          <a class="btn btn-outline-secondary" style="border-radius: 20%;"
             href="{{ url_for('posts.add_new_comment', post_id=post.id) }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chat"
               viewBox="0 0 16 16">
@@ -230,7 +230,7 @@
       </div>
       <div class="shares-div col-6 text-end">
         <a href="{{ url_for('posts.share_post', post_id=post.id) }}">
-          <a class="btn disabled" style="border-radius: 10px;">
+          <a class="btn" style="border-radius: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
               class="bi bi-box-arrow-up" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -238,7 +238,6 @@
               <path fill-rule="evenodd"
                 d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z" />
             </svg>
-            0
           </a>
         </a>
       </div>

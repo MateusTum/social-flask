@@ -9,6 +9,13 @@
 .btn-outline-secondary:hover {
   --bs-btn-hover-bg: transparent;
 }
+.btn-outline-secondary {
+  --bs-btn-color: white;
+  --bs-btn-border-color: #353535;
+  --bs-btn-active-bg: #ffffff00;
+  --bs-btn-active-border-color: #353535;
+  --bs-btn-hover-border-color: #353535;
+}
 
 .nav-tabs {
   --bs-nav-tabs-border-color: #9EC8B9;
