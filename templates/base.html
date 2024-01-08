@@ -17,7 +17,7 @@
 <body>
   {% include "header.html" %}
 
-  <main class="background-container container-fluid p-0">
+  <main style="background-color: rgb(0, 0, 0);"">
     {% block content %}{% endblock %}
   </main>
 
@@ -28,40 +28,7 @@
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const circularTabs = document.querySelectorAll('.circle-tabs .nav-link');
-      const activeTab = localStorage.getItem('activeTab');
-
-      if (activeTab) {
-        circularTabs.forEach(tab => {
-          tab.classList.remove('active');
-          if (tab.getAttribute('href') === activeTab) {
-            tab.classList.add('active');
-          }
-        });
-      }
-
-      circularTabs.forEach(tab => {
-        tab.addEventListener('click', function (event) {
-          event.preventDefault();
-
-          circularTabs.forEach(tab => {
-            tab.classList.remove('active');
-          });
-
-          this.classList.add('active');
-
-          const url = this.getAttribute('href');
-          localStorage.setItem('activeTab', url);
-
-          if (url) {
-            window.location.href = url;
-          }
-        });
-      });
-    });
-  </script>
+  <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 
