@@ -6,53 +6,10 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loading-overlay.css') }}">
 <style>
   .bi {
     vertical-align: -.125em;
-  }
-
-  .profile-header {
-    position: relative;
-    text-align: center;
-    padding: 20px;
-    color: #fff;
-    overflow: hidden;
-  }
-
-  .bg-div {
-    position: absolute;
-    object-fit: cover;
-    pointer-events: none;
-  }
-
-  .fade-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    pointer-events: none;
-    padding: 0;
-  }
-
-  .background-img {
-    opacity: 1;
-    z-index: -2;
-    padding: 0;
-  }
-
-  .fade-overlay {
-    right: 0;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent 1%, black);
-    z-index: -1;
-  }
-
-  .profile-picture {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 5px solid #030303;
   }
 
   .profile-name {
@@ -60,9 +17,14 @@
     font-size: 24px;
   }
 
-  .feed,
-  .card {
+  .feed {
     padding: 0;
+  }
+
+  .feed-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   h1 {
@@ -73,7 +35,6 @@
   #profile-information {
     background-color: #030303;
     border-radius: 10px;
-    padding: 10px;
   }
 
   .profile-info-container {
@@ -93,190 +54,265 @@
     height: 100%;
   }
 
-  #profile-feed {
-    padding: 0;
+  .tooltip {
+      position: absolute;
+      color: #fff;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+  /* Show the tooltip when hovering over the anchor tag */
+  a:hover + .tooltip {
+    display: block;
   }
+
+  #profile-feed {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    list-style-type: none;
+    overflow: hidden;
+}
+
+
 </style>
 
 
 {% endblock %}
 
 {% block content %}
-
-<div class="container-xl">
-  <div class="row justify-content-center">
-    <!-- Profile background -->
-    <div class="row col-12 bg-div p-0">
-      <div class="fade-overlay"></div>
-      <img src="{{ url_for('static', filename='assets/bg.jpg') }}" class="background-img">
+<div class="container-xl pt-2 mx-auto">
+  <!-- Profile Header -->
+  <div class="row d-flex justify-content-center text-center mx-auto">
+    <!-- div to house profile pic -->
+    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4">
+      <img src="{{ user.profile.profile_image_path }}" alt="Profile Picture" style="
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 0.2em solid #030303;" class="img-fluid ratio ratio-1x1">
     </div>
-    <!-- Profile Header -->
-    <div class="row col-lg-12">
-      <div class="profile-header">
-        <img src="{{ user.profile.profile_image_path }}" alt="Profile Picture" class="img-fluid profile-picture">
-        <h1 class="profile-name">{{ user.username }}</h1>
-        <!-- Btn group for profile edition and full profile -->
-        <div class="btn-group" role="group">
-          {% if current_user == user %}
-          <!-- Anchor tag (btn) to edit profile -->
-          <a class="btn btn-secondary" href="{{ url_for('users.edit_profile') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square"
-              viewBox="0 0 16 16">
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-              <path fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-            </svg>
-          </a>
-          {% endif %}
-          <!-- Anchor tag (btn) to show complete profile -->
-          <a class="btn btn-secondary">
-            Show info
-          </a>
-          <button class="btn btn-success" form="follow-form" type="submit">
-            <form id="follow-form" class="follow-form" method="POST"
-              action="{{ url_for('users.follow_user', user_id_to_follow=user.id) }}">
-              {{ form.hidden_tag() }}
-              {% if current_user in user.followers.all() %}
-              <div id="followIconContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
-                  class="follow-svg bi bi-person-check-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd"
-                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
-                  <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                </svg>
-              </div>
-              {% else %}
-              <div id="followIconContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
-                  class="follow-svg bi bi-person-fill-add" viewBox="0 0 16 16">
-                  <path
-                    d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                  <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />
-                </svg>
-              </div>
-              {% endif %}
-            </form>
-          </button>
-        </div>
-      </div>
+    <!-- div to house profile name -->
+    <div class="col-12">
+      <h1 class="profile-name">{{ user.username }}</h1>
     </div>
-
-    <div class="row profile-personal-info justify-content-sm-center align-items-center">
-      <!-- 1/3 -->
-      <div class="col-lg-3 col-md-6 col-sm-9 d-flex text-center justify-content-around align-items-center">
-        <div class="row col-12 d-flex justify-content-center">
-          <div class="row">
-            <div class="col-6 text-center">
-              <a href="#" class="d-flex flex-column align-items-center">
-                <span class="font-weight-bolder" style="font-size: 1.3em">{{ following|length }}</span>
-                <span>Following</span>
-              </a>
-            </div>
-            <div class="col-6 text-center">
-              <a href="#" class="d-flex flex-column align-items-center">
-                <span class="font-weight-bolder" style="font-size: 1.3em">{{ followers|length }}</span>
-                <span>Followers</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr class="mt-1 mb-1 d-block d-lg-none">
-      <!-- 2/3 -->
-      <div class="col-md-6 col-sm-12 justify-content-center align-items-center text-center">
-        <!-- Profile bio div -->
-        <div>
-          <span>{{ user.profile.bio }}</span>
-        </div>
-      </div>
-      <!-- 3/3 -->
-      <div class="col-md-3 d-flex text-center align-items-center d-none d-lg-block">
-        <!-- Profile social media links -->
-        <div class="btn-group">
-          <!-- Facebook anchor tag -->
-          <button type="button" class="btn btn-outline-secondary"
-            href="https://www.facebook.com/{{ user.profile.facebook_profile }}"">
-          <svg xmlns=" http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook"
+    <!-- Div to house  the btn group -->
+    <div class="pb-2">
+      <!-- Btn group for profile edition and full profile -->
+      <div class="btn-group" role="group">
+        {% if current_user == user %}
+        <!-- Anchor tag (btn) to edit profile -->
+        <a class="btn btn-secondary" href="{{ url_for('users.edit_profile') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil-square"
             viewBox="0 0 16 16">
             <path
-              d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
-            </svg>
-          </button>
-          <!-- Instagram anchor tag -->
-          <button type="button" class="btn btn-outline-secondary"
-            href="https://www.instagram.com/{{ user.profile.facebook_profile }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram"
-              viewBox="0 0 16 16">
-              <path
-                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
-            </svg>
-          </button>
-          <!-- Twitter anchor tag -->
-          <button type="button" class="btn btn-outline-secondary" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter"
-              viewBox="0 0 16 16">
-              <path
-                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15" />
-            </svg>
-          </button>
-          <!-- Linkedin anchor tag -->
-          <button type="button" class="btn btn-outline-secondary" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin"
-              viewBox="0 0 16 16">
-              <path
-                d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401m-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-center p-0">
-      <div id="profile-information" class="col-lg-3 mt-2 d-none d-lg-block" style="margin-right: 10px;">
-        <!-- Profile name and country div -->
-        <div class="col-12 text-start align-items-center flex-shrink-1 p-3">
-          <!-- Profile first and last name -->
-          <h4> {{ user.first_name }} {{ user.last_name }}</h4>
-          <hr>
-          <!-- Profile country -->
-          <span> From: {{ user.profile.country }}</span>
-          <hr>
-          <iframe id="spotifyIframe" style="border-radius:5%"
-            src="https://open.spotify.com/embed/track/0hZw4WGvobBufZ2rveQST8?si=004b739c20904e0e" width="100%"
-            height="352" frameBorder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy">
-          </iframe>
-        </div>
-      </div>
-      <!-- Profile feed -->
-      <div class="col-lg-9 col-sm-12 justify-content-center flex-shrink-1">
-        <!-- Feed content -->
-        <div class="col-lg-12 justify-content-center">
-          <div class="feed mt-2">
-            {% import "macros.html" as macros %}
-            <ol id="profile-feed" ">
-              {% for post in profile_posts %}
-              {{ macros.generate_post(post=post, current_user=current_user, macros=macros) }}
-              {% endfor %}
-            </ol>
-            {{ macros.modal() }}
-          </div>
-        </div>
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+            <path fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+          </svg>
+        </a>
+        {% endif %}
+        <!-- Anchor tag (btn) to show complete profile -->
+        <a class="btn btn-secondary">
+          Show info
+        </a>
+        <button id="followBtn"
+          class="btn {% if current_user in user.followers.all() %}btn-secondary{% else %}btn-success{% endif %}"
+          form="follow-form" type="submit">
+          <form id="follow-form" class="follow-form" method="POST"
+            action="{{ url_for('users.follow_user', user_id_to_follow=user.id) }}">
+            {{ form.hidden_tag() }}
+            {% if current_user in user.followers.all() %}
+            <div id="followIconContainer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
+                class="follow-svg bi bi-person-check-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+              </svg>
+            </div>
+            {% else %}
+            <div id="followIconContainer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white"
+                class="follow-svg bi bi-person-fill-add" viewBox="0 0 16 16">
+                <path
+                  d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path
+                  d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />
+              </svg>
+            </div>
+            {% endif %}
+          </form>
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- TODO: CLEAN THIS CODE -->
+  <div class="row profile-personal-info justify-content-sm-center align-items-center mt-2">
+    <!-- 1/3 -->
+    <div class="col-lg-3 col-md-6 col-sm-9">
+      <div class="row d-flex mx-auto justify-content-center">
+        <div class="col-4 text-center px-0">
+          <a href="#" class="flex-column">
+            <span class="font-weight-bolder" style="font-size: 1.3em">{{ following|length }}</span>
+            <br>
+            <span>Following</span>
+          </a>
+        </div>
+        <div class="col-4 text-center px-0">
+          <a href="#" class="flex-column">
+            <span class="font-weight-bolder" style="font-size: 1.3em">{{ followers|length }}</span>
+            <br>
+            <span>Followers</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- 2/3 -->
+    <div class="col-md-6 col-sm-12 col-12 justify-content-center align-items-center text-center py-4">
+      <!-- Profile bio div -->
+      <div>
+        <span>{{ user.profile.bio }}</span>
+      </div>
+    </div>
+    <!-- 3/3 -->
+    <div class="col-md-3 d-flex text-center align-items-center d-none d-lg-block">
+      <!-- Profile social media links -->
+      <div class="btn-group">
+        <!-- Facebook anchor tag -->
+        <button type="button" class="btn btn-outline-secondary"
+          href="https://www.facebook.com/{{ user.profile.facebook_profile }}"">
+        <svg xmlns=" http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook"
+          viewBox="0 0 16 16">
+          <path
+            d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+          </svg>
+        </button>
+        <!-- Instagram anchor tag -->
+        <button type="button" class="btn btn-outline-secondary"
+          href="https://www.instagram.com/{{ user.profile.facebook_profile }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram"
+            viewBox="0 0 16 16">
+            <path
+              d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+          </svg>
+        </button>
+        <!-- Twitter anchor tag -->
+        <button type="button" class="btn btn-outline-secondary" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter"
+            viewBox="0 0 16 16">
+            <path
+              d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15" />
+          </svg>
+        </button>
+        <!-- Linkedin anchor tag -->
+        <button type="button" class="btn btn-outline-secondary" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin"
+            viewBox="0 0 16 16">
+            <path
+              d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401m-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+
+<div class="container-xl d-flex p-0">
+  <div class="row col-lg-3 d-none d-lg-block mx-auto pt-2" style="padding-right: 10px;">
+    <div id="profile-information" class="p-3">
+      <!-- Profile name and country div -->
+      <div class="col-12 text-start align-items-center">
+        <!-- Profile first and last name -->
+        <h4> {{ user.first_name }} {{ user.last_name }}</h4>
+        <hr>
+        <!-- Profile country -->
+        <span> From: {{ user.profile.country }}</span>
+        <hr>
+        <iframe id="spotifyIframe" style="border-radius:5%"
+          src="https://open.spotify.com/embed/track/0hZw4WGvobBufZ2rveQST8?si=004b739c20904e0e" width="100%"
+          height="352" frameBorder="0" allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="row col-lg-9 col-12 mx-auto pt-2" style="height:fit-content">
+    <div class="col-12 d-flex text-center p-1"
+      style="background-color: #030303; border-top-right-radius: 10px; border-top-left-radius: 10px; height: 2.5rem">
+      <!-- Normal posts -->
+      <div class="col-4">
+        <a href="#" id="load-posts-feed" class="btn hover-link" data-toggle="tooltip" data-placement="top" title="Load text/pictures feed">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor"
+            class="bi bi-file-richtext-fill" viewBox="0 0 16 16">
+            <path
+              d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208M5 9h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1" />
+          </svg>
+        </a>
+      </div>
+      <!-- Chapters -->
+      <div class="col-4">
+        <a href="#" id="load-chapters-feed" class="btn hover-link" data-toggle="tooltip" data-placement="top" title="Load chapters feed">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor"
+            class="bi bi-journal-bookmark-fill" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M6 1h6v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8z" />
+            <path
+              d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+            <path
+              d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+          </svg>
+        </a>
+      </div>
+      <!-- Image posts -->
+      <div class="col-4">
+        <a href="#" id="load-pictures-feed" class="btn hover-link" data-toggle="tooltip" data-placement="top" title="Load pictures feed">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor"
+            class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16">
+            <path
+              d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+    
+
+    <!-- Profile feed -->
+    <div id="profile-feed" class="row p-0 mx-auto">
+    </div>
+    <div id="loading-overlay">
+      <div class="spinner-border text-primary" role="status" id="loading-spinner">
+      </div>
+    </div>
+  </div>
+  {% import "macros.html" as macros %}
+  {{ macros.modal() }}
+</div>
+
 
 {% endblock %}
 {% block scripts %}
-<script src=" {{ url_for('static', filename='js/posts.js' ) }}"></script>
-<script src="{{ url_for('static', filename='js/follow-user.js') }}"></script>
 <script>
   // This is the variable used to store the elementID where more posts from posts-dynamic-loading.js are loaded
   var elementID = '#profile-feed';
   // These are the variables used to load posts related to the user
   var isUserProfile = true;
   var profileUsername = "{{ user.username }}";
+  var baseLikeUrl = '{{ url_for('posts.like_post') }}';
+  var currentFeed = 'profileTextFeed';
 </script>
+<script>
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+<script src=" {{ url_for('static', filename='js/posts.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/follow-user.js') }}"></script>
 <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>
+<script src="{{ url_for('static', filename='js/loading-overlay.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile-feeds.js')}}"></script>
 {% endblock %}

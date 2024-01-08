@@ -1,22 +1,9 @@
-<div id="left-col" class="col-xl-2 col-lg-3 col-md-3 d-none d-md-block mx-1">
-    <div class="sticky row">
-        <div class="custom-left-column col-12">
-            <!-- Content for left column goes here -->
-            <div class="row mx-md-auto profile-rows justify-content-center">
-                <a href="{{ url_for('users.show_profile', username=current_user.username) }}" class="row btn d-flex">
-                    <div class="col-3 profile-picture-div d-flex justify-content-center">
-                        <img class="avatar" src="{{ current_user.profile.profile_image_path }}">
-                    </div>
-                    <!--User Profile-->
-                    <div class="col-9 d-flex justify-content-left align-items-center">
-                        <span>{{ current_user.username }}</span>
-                    </div>
-                </a>
-            </div>
-            <div class="row mx-md-auto quick-access justify-content-center">
-            </div>
-            <div class="row mx-md-auto inner-left-column-row justify-content-center">
-            </div>
-        </div>
+<div id="left-col" class="col-xl-2 col-lg-3 col-md-3 d-none d-md-block">
+    <!-- Content for left column goes here -->
+    <div class="sticky profile-rows d-flex col p-2 text-end">
+        <a href="{{ url_for('users.show_profile', username=current_user.username) }}">
+            <img class="avatar" src="{{ current_user.profile.profile_image_path }}">
+            <span class="px-2">{{ current_user.username }}</span>
+        </a>
     </div>
 </div>

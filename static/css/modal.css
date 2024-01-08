@@ -1,17 +1,11 @@
 .modal-body img {
     max-width: 100vh;
-    /* Allow the image to take 100% of the modal width */
     max-height: 100vh;
-    /* Limit the height to 80% of the viewport height */
     margin: 0 auto;
-    /* Center the image horizontally */
     display: block;
-    /* Remove any default inline spacing */
   }
 
   .modal-dialog {
-    max-width: 90%;
-    /* Set the maximum width of the modal dialog */
-    max-height: 75%;
-    /* Set the maximum width of the modal dialog */
+    max-width: 50vw;
+    max-height: 50vh;
   }

@@ -19,6 +19,7 @@ $(document).ready(function () {
                 '<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />' +
               '</svg>'
             );
+            $("#followBtn").removeClass("btn-success").addClass("btn-secondary");
           } else {
             $('#followIconContainer').html(
               '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="white" class="follow-svg bi bi-person-fill-add" viewBox="0 0 16 16">' +
@@ -26,6 +27,7 @@ $(document).ready(function () {
                 '<path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4" />' +
               '</svg>'
             );
+            $("#followBtn").removeClass("btn-secondary").addClass("btn-success");
           }
           // Display a message to the user
           console.log(response.message);

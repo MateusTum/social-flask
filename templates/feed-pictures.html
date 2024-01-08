@@ -1,0 +1,4 @@
+{% import "macros.html" as macros %}
+{% for post in posts %}
+    {{ macros.generate_pictures_feed(post) }}
+{% endfor %}

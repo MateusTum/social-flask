@@ -2,24 +2,25 @@
 {% import "macros.html" as macros %}
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loading-overlay.css') }}">
 {% endblock %}
 
 {% block content %}
 <!--FEED DIV-->
-<div id="main-window" class="container-fluid">
-    <div class="row d-flex justify-content-center">
+<div id="home-window" class="container-fluid">
+    <div class="row justify-content-center">
         <!--Left column start-->
         {% include "leftcol.html" %}
         <!--Center column start-->
-        <div class="center-column p-0 col-sm-12 col-md-8 col-lg-8 col-xl-6">
+        <div class="center-column col-sm-12 col-md-8 col-lg-8 col-xl-6 p-0">
             <div class="justify-content-center">
                 <!--Content for center column goes here -->
-                <ol id="feed-posts">
-                {% for post in posts %}
-                    {{ macros.generate_post(post=post, current_user=current_user, macros=macros) }}
-                {% endfor %}
+                <ol id="feed-posts">               
                 </ol>
+                <div id="loading-overlay">
+                    <div class="spinner-border text-primary" role="status" id="loading-spinner">
+                    </div>
+                </div>
             </div>
         </div>
         <!--Right column start-->
@@ -32,6 +33,8 @@
     {% block scripts %}
     <script>
         var elementID = '#feed-posts';
+        var baseLikeUrl = '{{ url_for('posts.like_post') }}';
+        var currentFeed = 'homeFeed';
     </script>
     <script>
         $(document).ready(function () {
@@ -46,6 +49,7 @@
             });
         });
     </script>
+    <script src="{{ url_for('static', filename='js/loading-overlay.js') }}"></script>
     <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>
     <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>

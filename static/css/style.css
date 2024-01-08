@@ -6,6 +6,10 @@
   --bs-btn-color: white;
 }
 
+.btn-outline-secondary:hover {
+  --bs-btn-hover-bg: transparent;
+}
+
 .nav-tabs {
   --bs-nav-tabs-border-color: #9EC8B9;
 }
@@ -81,7 +85,6 @@ header {
 .quick-access,
 .inner-left-column-row {
   border-radius: 10px;
-  margin-bottom: 10px;
 }
 
 /* Light theme background color */
@@ -212,12 +215,6 @@ header {
 }
 
 /* CAROUSEL */
-.carousel-inner img {
-  width: auto;
-  height: auto;
-  max-height: 75vh;
-  object-fit: contain;
-}
 
 .carousel {
   padding: 0;
@@ -406,11 +403,7 @@ header {
   display: block !important;
 }
 
-.custom-left-column {
-  height: 100%;
-  margin: 10px;
-}
-
+#left-col,
 .center-column {
   margin-top: 10px;
 }

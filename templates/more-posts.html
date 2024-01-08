@@ -1,4 +1,4 @@
 {% import "macros.html" as macros %}
 {% for post in posts %}
-    {{ macros.generate_post(post=post, current_user=current_user, macros=macros) }}
+    {{ macros.generate_post(post=post, current_user=current_user, macros=macros, loop=loop) }}
 {% endfor %}

@@ -41,9 +41,10 @@ def edit_post(post_id):
         return jsonify({'error': 'Forbidden'}), 403
 
 
-@bp.route('/like-post/<int:post_id>', methods=['POST'])
+@bp.route('/like-post', methods=['POST'])
 @login_required
-def like_post(post_id):
+def like_post():
+    post_id = request.args.get('post_id', 1, type=int)
     post = Post.query.get(post_id)
     if post:
         if post not in current_user.likes:
@@ -142,22 +143,34 @@ def add_new_comment(post_id):
 def load_posts():
     page = request.args.get('page', 1, type=int)
     is_user_profile = request.args.get('isUserProfile', type=bool)
+    feed_pictures = request.args.get('isFeedPictures', type=bool)
 
     posts = (Post.query
     .order_by(Post.created_at.desc())
     .filter(Post.status == 'active')
     .paginate(page=page, per_page=ROWS_PER_PAGE))
+    page_content =  render_template('more-posts.html', posts=posts)
 
-    if is_user_profile == True:
+    if is_user_profile or feed_pictures:
         profileUsername = request.args.get('profileUsername', type=str)
         user = User.query.filter_by(username=profileUsername).scalar()
         posts = (Post.query
         .order_by(Post.created_at.desc())
         .filter(Post.status == 'active', Post.authors.contains(user))
         .paginate(page=page, per_page=ROWS_PER_PAGE))
+        
+        page_content =  render_template('more-posts.html', posts=posts)
+
+        if feed_pictures:
+            user = User.query.filter_by(username=profileUsername).scalar()
+            posts = (Post.query
+            .order_by(Post.created_at.desc())
+            .filter(Post.status == 'active', Post.authors.contains(user), Post.image != None)
+            .paginate(page=page, per_page=ROWS_PER_PAGE))
+            page_content =  render_template('feed-pictures.html', posts=posts)
 
     response_data = {
-        'content': render_template('more-posts.html', posts=posts),
+        'content': page_content,
         'last_page': True if page == posts.pages else False,
     }
 

@@ -3,6 +3,10 @@
 {% block styles %}
 
 <style>
+    #post {
+        height: auto;
+    }
+
 
 </style>
 
@@ -10,9 +14,9 @@
 {% endblock %}
 
 {% block content %}
-<ol id="post" class="container-lg justify-content-center mt-auto px-0">
+<div id="post" class="container-xl p-0 mx-auto">
     <!-- Post -->
-    <li class="post row mx-auto ">
+    <div class="col-lg-8 col-sm-12 col-12 mx-auto">
         <!-- Post top div -->
         <div class="post-title d-flex col-12">
             <!-- Profile picture -->
@@ -52,9 +56,8 @@
                 <div class="carousel-inner">
                     {% for image in post.get_post_images() %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="{{ url_for('static', filename=post.image + '/' + image) }}" class="d-block w-100"
-                            alt="Post Image" data-toggle="modal" data-target="#imageModal" ,
-                            onclick="showOverlay(this.src)">
+                        <img src="{{ url_for('static', filename=post.image + '/' + image) }}" class="d-block img-fluid mx-auto"
+                            alt="Post Image">
                     </div>
                     {% endfor %}
                 </div>
@@ -84,7 +87,7 @@
                         <div class="btn-group">
                             <a class="btn btn-outline-secondary like-post-btn"
                                 style="border-bottom-left-radius: 25%; border-top-left-radius: 25%;"
-                                role="button">
+                                role="button" data-post-id="{{ post.id }}">
                                 {% if post in current_user.likes %}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
                                     class="bi bi-star-fill likeImage liked" viewBox="0 0 16 16">
@@ -156,10 +159,13 @@
         </div>
         {% endfor %}
         {% endif %}
-    </li>
-</ol>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
+<script>
+    var baseLikeUrl = '{{ url_for('posts.like_post') }}';
+</script>
 <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
 {% endblock %}

@@ -1,84 +1,76 @@
-let loadMore = true;
-let page = 2;
+var loadMore = true;
+let page = 1;
+let isLoading = false;
 
-/**
- * Initializes a scroll event listener to trigger the loading of more content when the user scrolls.
- *
- * When the user scrolls and reaches near the bottom of the page, and if there is more content to load
- * (as indicated by the `loadMore` variable), this function calls the `loadContent` function with the specified
- * element ID.
- *
- * @function
- * @returns {void}
- */
-$(document).ready(function () {
-  /**
-   * Event handler for the scroll event.
-   *
-   * Checks if the user has scrolled near the bottom of the page and if there is more content to load.
-   * If both conditions are met, it calls the `loadContent` function with the specified element ID.
-   *
-   * @param {Event} event - The scroll event object.
-   * @returns {void}
-   * @inner
-   */
-  $(window).scroll(function () {
-    if (
-      $(window).scrollTop() + $(window).height() >=
-        $(document).height() - 1 &&
-      loadMore
-    ) {
-      loadContent(elementID);
-    }
-  });
-});
-
-
-/**
- * Appends loaded posts to a specified HTML element.
- *
- * This function fetches posts from the server and appends them to the HTML element
- * with the provided ID.
- *
- * @param {string} elementId - The ID of the HTML element to which the posts will be appended.
- * @returns {void}
- */
-function loadContent(elementID) {
-  /**
-   * Append the loaded posts to the specified HTML element.
-   *
-   * @param {string} elementId - The ID of the HTML element.
-   * @returns {void}
-   * @inner
-   */
-
-  if (typeof isUserProfile !== 'undefined') {
-    var queryParams = new URLSearchParams({
+function buildApiUrl() {
+  var queryParams;
+  if (currentFeed === "profileTextFeed") {
+    queryParams = new URLSearchParams({
       page,
       isUserProfile,
       profileUsername,
     });
+  } else if (currentFeed === "profileChaptersFeed" || currentFeed === "profilePicturesFeed") {
+    queryParams = new URLSearchParams({
+      page,
+      profileUsername,
+      isFeedPictures,
+    });
   } else {
-    var queryParams = new URLSearchParams({ page });
+    queryParams = new URLSearchParams({ page });
   }
-  var apiUrl = "/posts/load-posts?" + queryParams;
+  return "/posts/load-posts?" + queryParams;
+};
 
+function loadContent(elementID) {
+  if (isLoading) {
+    return;
+  }
+
+  isLoading = true;
+
+  var apiUrl = buildApiUrl();
+  
   $.ajax({
     url: apiUrl,
     method: "GET",
     success: function (response) {
       if (response.last_page == false) {
         $(elementID).append(response.content);
-        console.log("Loading more posts");
+        console.log("Loading more posts. Current page:", page);
         page++;
+        hideLoadingOverlay();
+        isLoading = false;
       } else {
         $(elementID).append(response.content);
         console.log("Last posts loaded, no more posts to load");
         loadMore = false;
+        hideLoadingOverlay();
+        isLoading = false;
       }
     },
     error: function (error) {
-      console.log("Error:", error);
-    },
+      console.error("Error loading posts:", error);
+    }, 
   });
-}
+};
+
+function debounce(func, delay) {
+  let timeoutId;
+  return function () {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(func, delay);
+  };
+};
+
+$(document).ready(function () {
+  showLoadingOverlay();
+  loadContent(elementID);
+  $(window).scroll(debounce(function () {
+    if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50 && loadMore) {
+      showLoadingOverlay();
+      console.log('Loading content...');
+      loadContent(elementID);
+    }
+  }, 1000));
+});

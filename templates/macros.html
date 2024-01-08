@@ -113,11 +113,11 @@
 {% endmacro %}
 
 
-{% macro generate_post(post, current_user, macros) %}
+{% macro generate_post(post, current_user, macros, loop) %}
 <!-- Post -->
-<li class="post row mx-auto">
+<li class="post row mx-auto p-0">
   <!-- Post top div -->
-  <div class="post-title d-flex col-12">
+  <div class="post-title d-flex col-12" style="{% if loop.index0 == 0 %} border-top-left-radius: 0px; border-top-right-radius: 0px; {% endif %}">
     <!-- Profile picture -->
     <div class="left-box">
       <a href="{{ url_for('users.show_profile', username=post.authors[0].username) }}">
@@ -155,7 +155,10 @@
         {% for image in post.get_post_images() %}
         <div class="carousel-item {% if loop.first %}active{% endif %}">
           <img src="{{ url_for('static', filename=post.image + '/' + image) }}" class="d-block w-100" alt="Post Image"
-            data-toggle="modal" data-target="#imageModal" , onclick="showOverlay(this.src)">
+            data-toggle="modal" data-target="#imageModal" , onclick="showOverlay(this.src)" style="width: auto;
+            height: auto;
+            max-height: 75vh;
+            object-fit: contain;">
         </div>
         {% endfor %}
       </div>
@@ -186,11 +189,10 @@
   <div class="post-interactions col-12">
     <div class="row text-start">
       <div class="likes-div col-6">
-        <form method="POST" action="{{ url_for('posts.like_post', post_id=post.id) }}">
           <div class="btn-group">
             <a class="btn btn-outline-secondary like-post-btn" 
-            style="border-bottom-left-radius: 25%; border-top-left-radius: 25%;" 
-            role="button">
+            style="border-bottom-left-radius: 10px; border-top-left-radius: 10px;" 
+            role="button" data-post-id="{{ post.id }}">
               {% if post in current_user.likes %}
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
                 class="bi bi-star-fill likeImage liked" viewBox="0 0 16 16">
@@ -214,11 +216,10 @@
               {{ post.get_post_comments() }}
             </a>
           </div>
-        </form>
       </div>
       <div class="shares-div col-6 text-end">
         <a href="{{ url_for('posts.share_post', post_id=post.id) }}">
-          <a class="btn disabled" style="border-radius: 25%;">
+          <a class="btn disabled" style="border-radius: 10px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-box-arrow-up" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1z"/>
               <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z"/>
@@ -257,15 +258,46 @@
   </div>
   {% endif %}
 </li>
-{% endmacro %};
+{% endmacro %}
+
+{% macro generate_pictures_feed(post) %}
+  {% if post.image %}
+  <div id="post-{{ post.id }}-images-carousel" class="carousel slide col-4 p-0">
+    <ol class="carousel-indicators">
+      {% for image in post.get_post_images() %}
+      <li type="button" data-bs-target="#post-{{ post.id }}-images-carousel" data-bs-slide-to="{{ loop.index0 }}"
+        class="{% if loop.index0 == 0 %}active{% endif %}" aria-current="true" aria-label="Slide {{ loop.index }}">
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="carousel-inner" style="background-color: black;">
+      {% for image in post.get_post_images() %}
+      <div class="carousel-item {% if loop.first %}active{% endif %} ratio ratio-1x1">
+        <a href="{{ url_for('posts.show_post', post_id=post.id) }}">
+          <img src="{{ url_for('static', filename=post.image + '/' + image) }}" alt="Post Image" class="feed-picture">
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#post-{{ post.id }}-images-carousel"
+      data-bs-slide="prev">
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#post-{{ post.id }}-images-carousel"
+      data-bs-slide="next">
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  {% endif %}
+{% endmacro %}
 
 {% macro modal() %}
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" >
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body">
-          <img src="" alt="Full Image" class="col-12">
+          <img class="img-fluid" src="" alt="Full Image">
       </div>
     </div>
   </div>
