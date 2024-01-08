@@ -117,7 +117,7 @@
 <!-- Post -->
 <li class="post row mx-auto p-0">
   <!-- Post top div -->
-  <div class="post-title d-flex col-12" style="{% if loop.index0 == 0 %} border-top-left-radius: 0px; border-top-right-radius: 0px; {% endif %}">
+  <div class="post-title d-flex col-12" {% if loop.index0 == 0 %} style="border-top-left-radius: 0px; border-top-right-radius: 0px;" {% endif %}>
     <!-- Profile picture -->
     <div class="left-box">
       <a href="{{ url_for('users.show_profile', username=post.authors[0].username) }}">
