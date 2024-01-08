@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% import "macros.html" as macros %}
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/loading-overlay.css') }}">
 {% endblock %}
 
@@ -26,7 +25,6 @@
         <!--Right column start-->
         {% include "rightcol.html" %}
     </div>
-    {{ macros.modal() }}
     {{ macros.color_theme() }}
     {% endblock %}
 </div>

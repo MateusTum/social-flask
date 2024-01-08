@@ -58,12 +58,6 @@ $(document).ready(function () {
   });
 });
 
-function showOverlay(src) {
-  const modalImage = document.querySelector("#imageModal img");
-  modalImage.src = src;
-  $("#imageModal").modal("show");
-};
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("JavaScript is working!");
 });
