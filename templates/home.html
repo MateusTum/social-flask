@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loading-overlay.css') }}">
+{% endblock %}
+
+{% block content %}
+<!--FEED DIV-->
+<div id="home-window" class="container-fluid">
+    <div class="row justify-content-center">
+        <!--Left column start-->
+        {% include "leftcol.html" %}
+        <!--Center column start-->
+        <div class="center-column col-sm-12 col-md-8 col-lg-8 col-xl-6 p-0">
+            <div class="justify-content-center">
+                <!--Content for center column goes here -->
+                <ol id="feed-posts">               
+                </ol>
+                <div id="loading-overlay">
+                    <div class="spinner-border text-primary" role="status" id="loading-spinner">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Right column start-->
+        {% include "rightcol.html" %}
+    </div>
+    {{ macros.color_theme() }}
+    {% endblock %}
+</div>
+    {% block scripts %}
+    <script>
+        var elementID = '#feed-posts';
+        var baseLikeUrl = "{{ url_for('posts.like_post') }}";
+        var currentFeed = 'homeFeed';
+    </script>
+    <script>
+        $(document).ready(function () {
+            var stickyDivOffset = $(".sticky").offset().top;
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > stickyDivOffset) {
+                    $(".sticky").addClass("fixed");
+                } else {
+                    $(".sticky").removeClass("fixed");
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/loading-overlay.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/color-modes.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/posts-dynamic-loading.js') }}"></script>
+    {% endblock %}

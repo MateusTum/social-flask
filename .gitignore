@@ -1,0 +1,10 @@
+__pycache__
+instance
+venv
+.idea/
+.idea/misc.xml
+.idea/my-social-media-flask.iml
+*.iml
+*.xml
+static/uploads/
+playground.py

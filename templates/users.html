@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}
+Users
+{% endblock %}
+
+{% block content %}
+<main class="mb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">User ID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Creation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>
+                            <a href="{{ url_for('users.show_profile', username=user.username) }}">
+                                {{ user.username }}
+                            </a>
+                            </td>
+                            <td>{{ user.first_name }}</td>    
+                            <td>{{ user.last_name }}</td>    
+                            <td>{{ user.role }}</td> 
+                            <td>{{ user.created_at }}</td> 
+                            <td>
+                                <form class="follow-form" method="POST" action="{{ url_for('users.follow_user', user_id_to_follow=user.id) }}">
+                                    <button class="btn-primary follow-user"
+                                    role="button">
+                                    {% if current_user in user.followers.all() %}Unfollow{% else %}Follow{% endif %}
+                                    </button>
+                                </form>
+                            </td>   
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        // Intercept the form submissions
+        $(".follow-form").submit(function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Reference the form being submitted
+            var $form = $(this);
+
+            // Perform AJAX request
+            $.ajax({
+                type: "POST",
+                url: $form.attr("action"),
+                success: function (data) {
+                    // Update the button text based on the response
+                    var buttonText = data.message.includes("unfollow") ? "Follow" : "Unfollow";
+                    $form.find(".follow-user").text(buttonText);
+                },
+                error: function (error) {
+                    console.error("Error:", error);
+                    // Handle error if needed
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

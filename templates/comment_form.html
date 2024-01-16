@@ -1,0 +1,10 @@
+{% from "bootstrap5/form.html" import render_field %}
+<div>
+    <form method="POST" action="{{ url_for('posts.add_new_comment') + '?' + 'post_id=' + post_id }}" class="comment-form">
+        {{ form.hidden_tag() }}
+        {{ render_field(form.content, placeholder='Your Comment') }}
+        <div class="mb-2">
+            {{ render_field(form.submit) }}
+        </div>
+    </form>
+</div>
