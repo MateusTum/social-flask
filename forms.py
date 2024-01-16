@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import StringField, SubmitField, PasswordField, DateField, TextAreaField, FileField, MultipleFileField, \
+from wtforms import TextAreaField, StringField, SubmitField, PasswordField, DateField, TextAreaField, FileField, MultipleFileField, \
     validators
 from wtforms.validators import DataRequired, URL, Length, EqualTo, Optional, ValidationError
 from flask_ckeditor import CKEditorField
@@ -41,8 +41,8 @@ class PostForm(FlaskForm):
 
 # Comment form ----------------------------------------------------
 class CommentForm(FlaskForm):
-    content = CKEditorField("Comment Content", validators=[DataRequired()])
-    submit = SubmitField("Post")
+    content = TextAreaField('', render_kw={"rows": 5})
+    submit = SubmitField("Submit")
 
 
 # Profile Form ----------------------------------------------------

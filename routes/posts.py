@@ -6,6 +6,9 @@ from funcs import generate_unique_filename
 from models import db
 from models.tables import Post, Comment, User
 from config import ROWS_PER_PAGE
+import html
+from itsdangerous import URLSafeSerializer
+import secrets
 
 bp = Blueprint('posts', __name__)
 
@@ -75,7 +78,7 @@ def add_new_post():
         if 'images' in request.files:
             files = request.files.getlist('images')
 
-            if len(files) > 1:
+            if len(files) >= 1:
                 uploaded_images = create_post_form.images.data
                 upload_directory = os.path.join(f'./static/uploads/{current_user.username}/posts/{new_post.id}')
 
@@ -103,7 +106,9 @@ def add_new_post():
 @bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def show_post(post_id):
-    post = Post.query.get_or_404(post_id)
+    post = Post.query.filter(Post.status == 'active', Post.id == post_id).scalar()
+    if post == None:
+        return jsonify({'error': 'Post not found'})
     return render_template('post.html', post=post)
 
 
@@ -121,22 +126,48 @@ def share_post(post_id):
     return jsonify({'error': 'In progress'})
 
 
-@bp.route("/post/<int:post_id>/new-comment", methods=["GET", "POST"])
+@bp.route("/post/new-comment", methods=["POST"])
 @login_required
-def add_new_comment(post_id):
+def add_new_comment():
+    def string_to_html_paragraph(input_string):
+        escaped_string = html.escape(input_string)
+        html_paragraph = '<p>' + escaped_string.replace('\n', '<br>') + '</p>'
+        return html_paragraph
+
+    post_id = request.args.get('post_id')
     create_comment_form = CommentForm()
     current_post = Post.query.get(post_id)
     if create_comment_form.validate_on_submit():
         new_comment = Comment(
-            content=create_comment_form.content.data,
+            content=string_to_html_paragraph(create_comment_form.content.data),
         )
         db.session.add(new_comment)
         new_comment.author.append(current_user)
         new_comment.post.append(current_post)
         db.session.commit()
-        return redirect(url_for("home.home"))
-    return render_template("new-comment.html", create_comment_form=create_comment_form)
+        return redirect(url_for("posts.show_post", post_id=post_id))
 
+
+@bp.route('/delete-comment', methods=['POST'])
+@login_required
+def delete_comment():
+    comment_id = request.args.get('comment_id')
+    comment = (Comment.query
+    .filter(Comment.id == comment_id)
+    .filter(Comment.authors.contains(current_user)))
+    if comment == None:
+        error = "Comment doesnt exist or user is not the author of the comment"
+    else:
+        db.remove(comment)
+        db.commit()
+    return jsonify()
+
+@bp.route('/get_comment_form', methods=['GET'])
+@login_required
+def get_comment_form():
+    post_id = request.args.get('post_id')
+    form = CommentForm()
+    return jsonify({'form_html': render_template('comment_form.html', form=form, post_id=post_id)})
 
 @bp.route("/load-posts", methods=['GET'])
 @login_required

@@ -1,3 +1,10 @@
+function deletePostItem(postId) {
+  var listItem = document.getElementById(postId);
+  if (listItem) {
+      listItem.parentNode.removeChild(listItem);
+  }
+}
+
 $(document).ready(function() {
     $(document).on('click', '.like-post-btn', function(event) {
       let likesDiv = $(this).closest("div");
@@ -32,12 +39,10 @@ $(document).ready(function() {
 });
 
 
-$(document).ready(function () {
-  $('.delete-post').on('click', function (e) {
+
+$(document).on('click', '.delete-post', function(e) {
       e.preventDefault();
-
       var postId = $(this).data('post-id');
-
       var isConfirmed = confirm('Are you sure you want to delete this post?');
 
       if (isConfirmed) {
@@ -48,6 +53,7 @@ $(document).ready(function () {
               success: function (response) {
                   console.log(response);
                   alert('Post deleted successfully');
+                  deletePostItem("post-" + postId);
               },
               error: function (error) {
                   console.error(error);
@@ -56,7 +62,6 @@ $(document).ready(function () {
           });
       }
   });
-});
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("JavaScript is working!");

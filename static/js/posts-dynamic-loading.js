@@ -23,6 +23,7 @@ function buildApiUrl() {
 };
 
 function loadContent(elementID) {
+  showLoadingOverlay();
   if (isLoading) {
     return;
   }
@@ -39,13 +40,12 @@ function loadContent(elementID) {
         $(elementID).append(response.content);
         console.log("Loading more posts. Current page:", page);
         page++;
-        hideLoadingOverlay();
         isLoading = false;
       } else {
+        hideLoadingOverlay();
         $(elementID).append(response.content);
         console.log("Last posts loaded, no more posts to load");
         loadMore = false;
-        hideLoadingOverlay();
         isLoading = false;
       }
     },
@@ -68,7 +68,6 @@ $(document).ready(function () {
   loadContent(elementID);
   $(window).scroll(debounce(function () {
     if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50 && loadMore) {
-      showLoadingOverlay();
       console.log('Loading content...');
       loadContent(elementID);
     }

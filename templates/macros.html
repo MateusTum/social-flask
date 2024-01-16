@@ -36,7 +36,7 @@
 {% endmacro %}
 
 {% macro comment_settings(comment, current_user) %}
-<div class="col-sm-1 col-1 mb-auto">
+<div class="col-sm-1 col-1 ms-auto mb-auto">
   <a href="#" class="d-block link-body-emphasis text-decoration-none text-end" data-bs-toggle="dropdown"
     aria-expanded="false">
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-three-dots"
@@ -121,7 +121,7 @@
 
 {% macro generate_post(post, current_user, macros, loop) %}
 <!-- Post -->
-<li class="post row mx-auto p-0">
+<li id="post-{{ post.id }}" class="post row mx-auto p-0">
   <!-- Post top div -->
   <div class="post-title d-flex col-12" {% if loop.index0==0 %}
     style="border-top-left-radius: 0px; border-top-right-radius: 0px;" {% endif %}>
@@ -218,7 +218,7 @@
             <span class="ml-1 likeCount">{{ post.get_post_likes() }}</span>
           </a>
           <a class="btn btn-outline-secondary" style="border-radius: 20%;"
-            href="{{ url_for('posts.add_new_comment', post_id=post.id) }}">
+            href="{{ url_for('posts.show_post', post_id=post.id) }}#comments-section">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chat"
               viewBox="0 0 16 16">
               <path

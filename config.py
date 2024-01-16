@@ -13,7 +13,7 @@ DEBUG = True
 
 # HOST: The network interface on which the Flask development server will listen.
 # '0.0.0.0' means the server will be accessible from any IP address, making it suitable for development environments.
-HOST = "0.0.0.0"
+HOST = "127.0.0.1"
 
 # ROWS_PER_PAGE: Number of posts loaded on feed
 ROWS_PER_PAGE = 10
