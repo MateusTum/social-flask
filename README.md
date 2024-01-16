@@ -87,7 +87,3 @@ If you'd like to contribute to My Social Media, please follow these steps:
 ## License
 
 My Social Media is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-=======
-# my-social-media-flask
- My social media, made using Python(Flask), Javascript, HTML and CSS, the project is being worked on the staging branch
->>>>>>> main
