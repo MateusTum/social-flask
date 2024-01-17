@@ -22,7 +22,7 @@ To get started with My Social Media, follow these steps:
 1. **Navigate to the project directory:**
 
    ```bash
-   git clone https://github.com/mateustum/my-social-media-flask
+   git clone https://github.com/mateustum/social-flask.git
    ```
 
 2. **Install the required dependencies:**
